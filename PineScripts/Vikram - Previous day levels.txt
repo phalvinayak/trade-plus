@@ -1,0 +1,131 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Vikram2010
+
+//@version=5
+indicator(title='Previous levels', shorttitle='lvl', overlay=true)
+
+dupon = input(true, title='15 Minute Opening Range High')
+ddownon = input(true, title='15 Minute Opening Range Low')
+
+is_newbar(res) =>
+    ta.change(time(res)) != 0
+
+adopt(r, s) =>
+    request.security(syminfo.tickerid, r, s)
+
+//high_range = valuewhen(is_newbar('D'),high,0)
+//low_range = valuewhen(is_newbar('D'),low,0)
+
+dhigh_rangeL = ta.valuewhen(is_newbar('D'), high, 0)
+dlow_rangeL = ta.valuewhen(is_newbar('D'), low, 0)
+
+d1 = input('15')
+dT = input(2.35)
+ddiff = (dhigh_rangeL - dlow_rangeL) / dT
+dup = plot(dupon ? adopt(d1, dhigh_rangeL) : na, color=color.green, linewidth=2, style=plot.style_line, title='dup')
+ddown = plot(ddownon ? adopt(d1, dlow_rangeL) : na, color=color.red, linewidth=2, style=plot.style_line, title='ddo')
+
+ddiffup = plot(dupon ? adopt(d1, dhigh_rangeL + ddiff) : na, color=color.green, linewidth=1, style=plot.style_line, title='dup')
+ddiffdown = plot(ddownon ? adopt(d1, dlow_rangeL - ddiff) : na, color=color.red, linewidth=1, style=plot.style_line, title='ddo')
+
+
+fill(dup, ddiffup, color=color.new(color.green, 97))
+fill(ddown, ddiffdown, color=color.new(color.red, 97))
+
+isess = session.regular
+t = ticker.new(syminfo.prefix, syminfo.ticker, session=isess)
+igaps = barmerge.gaps_off
+
+pdHigh = request.security(t, 'D', high[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+pdLow = request.security(t, 'D', low[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+pdopen = request.security(t, 'D', open[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+pdclose = request.security(t, 'D', close[1], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+
+pdHigh1 = request.security(t, 'D', high[2], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+pdLow1 = request.security(t, 'D', low[2], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+pdopen1 = request.security(t, 'D', open[2], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+pdclose1 = request.security(t, 'D', close[2], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+
+pdlevel= input(true, title='Previous day levels')
+// Plot the other time frame's data
+dh = plot(pdlevel ? pdHigh : na, color=color.new(color.black, 0), linewidth=2, style=plot.style_circles, title='yhigh')
+dl = plot(pdlevel ? pdLow : na, color=color.new(color.black, 0), linewidth=2, style=plot.style_circles, title='ylow')
+dopen = plot(pdlevel? pdopen : na, color=color.new(color.red, 0), linewidth=2, style=plot.style_circles, title='yopen')
+dc = plot(pdlevel ? pdclose : na, color=color.new(color.green, 0), linewidth=2, style=plot.style_circles, title='yclose')
+
+dh1 = plot(pdlevel ? pdHigh1 : na, color=color.new(color.black, 20), linewidth=2, style=plot.style_cross, title='pdhigh')
+dl1 = plot(pdlevel ? pdLow1 : na, color=color.new(color.black, 20), linewidth=2, style=plot.style_cross, title='pdlow')
+
+
+//
+isess1 = session.extended
+tex = ticker.new(syminfo.prefix, syminfo.ticker, session=isess1)
+
+exopen = request.security(tex, 'D', open, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+dex = plot(pdlevel ? exopen : na, color=color.new(color.blue, 50), linewidth=2, style=plot.style_circles, title='exopen')
+
+oprice = input(true, title='5 Minute candle open price')
+
+tx = ticker.new(syminfo.prefix, syminfo.ticker, session.extended)
+
+adopt2(r1, s1) =>
+    request.security(tx, r1, s1)
+    
+dopen_price = ta.valuewhen(is_newbar('D'), open, 0)
+
+d20 = input('5')
+p1 = adopt2(d20, dopen_price)
+
+//Level=1
+lev3 = ((math.sqrt(p1)*180) % 360)
+x3 = lev3/ 60
+x31 = int(x3)
+hr3= x31 + 9
+min3 = math.abs(math.round((x31-x3)*60,4))
+
+//Level=2
+lev2 = p1 % 360
+x2 = lev2/ 60
+x21 = int(x2)
+hr2 = x21 + 9
+min2 = math.abs(math.round((x21-x2)*60,4))
+
+//Level=3
+lev1 = ((math.sqrt(p1)*180)-225) % 360
+x1 = lev1 / 60
+x11 = int(x1)
+hr1 = x11 + 9
+min1 = math.abs(math.round((x11-x1)*60,4))
+
+
+TimeTableOn = input.bool(true, title="Indicator Directions Table On/Off", group="Info Tables")
+//Table Positions
+bright1 = position.bottom_right
+bleft1 = position.bottom_left
+bcenter1 = position.bottom_center
+tright1 = position.top_right
+tleft1 = position.top_left
+tcenter1 = position.top_center
+mright1 = position.middle_right
+mleft1 = position.middle_left
+mcenter1 = position.middle_center
+itablePosition1 = input.string(mright1, title="Indicator Table Position", options=[bright1, bleft1, bcenter1, tright1, tleft1, tcenter1, mright1, mleft1, mcenter1], group="Info Tables")
+
+text01 = str.tostring(p1)
+text11 = str.tostring(math.round(hr3))
+text21 = str.tostring(math.round(min3))
+text31 = str.tostring(math.round(hr2))
+text41 = str.tostring(math.round(min2))
+text51 = str.tostring(math.round(hr1))
+text61 = str.tostring(math.round(min1))
+
+
+TimeTable = table.new(itablePosition1, columns=3, rows=5)
+
+if TimeTableOn
+    table.cell(table_id=TimeTable, column=0, row=0, text="Gann Reversals", height=0, text_color=color.white, text_halign=text.align_left, text_valign=text.align_top, bgcolor=color.purple)
+    table.cell(table_id=TimeTable, column=0, row=1, text= text01, height=0, text_color=color.black, text_halign=text.align_left, text_valign=text.align_top)
+    table.cell(table_id=TimeTable, column=0, row=2, text= str.tostring(text11) + ":" + str.tostring(text21), height=0, text_color=color.black, text_halign=text.align_left, text_valign=text.align_top)
+    table.cell(table_id=TimeTable, column=0, row=3, text= str.tostring(text31) + ":" + str.tostring(text41), height=0, text_color=color.black, text_halign=text.align_left, text_valign=text.align_top)
+    table.cell(table_id=TimeTable, column=0, row=4, text= str.tostring(text51) + ":" + str.tostring(text61), height=0, text_color=color.black, text_halign=text.align_left, text_valign=text.align_top)
+    

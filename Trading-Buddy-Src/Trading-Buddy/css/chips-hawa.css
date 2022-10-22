@@ -1,0 +1,584 @@
+.chips-hawa-price{
+  margin-right:10px;
+  background:rgb(183, 239, 193);
+  padding:2px 5px;
+  flex: auto;
+}
+
+.chips-hawa-price.hawa{
+  background:rgb(255, 207, 207);
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+.main-container {
+  padding: 30px;
+}
+
+/* HEADING */
+
+.heading {
+  text-align: center;
+}
+
+.heading__title {
+  font-weight: 600;
+}
+
+.heading__credits {
+  margin: 10px 0px;
+  color: #888888;
+  font-size: 25px;
+  transition: all 0.5s;
+}
+
+.heading__link {
+  text-decoration: none;
+}
+
+.heading__credits .heading__link {
+  color: inherit;
+}
+
+/* CARDS */
+
+.chips-hawa-cards{
+  position: fixed;
+  right: 2px;
+  top: 45%;
+  z-index: 1000;
+  max-width: 400px;
+  transition: all 1s ease;
+}
+.chips-hawa-cards.cards.hide{
+  right: -400px;
+}
+
+
+.chips-hawa-cards.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.chips-hawa-cards.cards .card {
+  padding: 10px;
+  grid-template-rows: 20px 50px 1fr 50px;
+  border-radius: 10px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s;
+  border: 2px solid red;
+  min-height: 120px;
+  min-width: 200px;
+}
+
+.chips-hawa-cards.cards .card:hover button{
+  display: block;
+}
+
+.chips-hawa-cards.cards .card h2{
+  font-size: 1em;
+  margin: 0;
+}
+
+.chips-hawa-cards.cards .card p{
+  color: #ffffff;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.chips-hawa-cards.cards .card small{
+  font-size: 0.7em;
+  font-style: italic;
+  color: #fff;
+  display: block;
+}
+.chips-hawa-cards.cards .card:hover {
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
+  transform: scale(1.01);
+}
+
+.chips-hawa-cards.cards .card__link,
+.chips-hawa-cards.cards .card__exit,
+.chips-hawa-cards.cards .card__icon {
+  position: relative;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chips-hawa-cards.cards .card__link::after {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  content: "";
+  width: 0%;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.6);
+  transition: all 0.5s;
+}
+
+.chips-hawa-cards.cards .card__link:hover::after {
+  width: 100%;
+}
+
+.chips-hawa-cards.cards .card__title {
+  grid-row: 3/4;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.chips-hawa-cards.cards .card__apply {
+  grid-row: 4/5;
+  align-self: center;
+}
+
+/* Close Button */
+.chips-hawa-cards.cards button {
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+  background: #000;
+  display: none;
+}
+
+.chips-hawa-cards.cards button::before,
+.chips-hawa-cards.cards button::after {
+    content: '';
+    width: 1px;
+    height: 100%;
+    background: #fff;
+    display: block;
+    transform: rotate(45deg) translateX(0px);
+    position: absolute;
+    left: 50%;
+    top: 0;
+}
+
+.chips-hawa-cards.cards button::after {
+    transform: rotate(-45deg) translateX(0px);
+}
+
+/* CARD BACKGROUNDS */
+
+.chips-hawa-cards.cards .card-1 {
+  background: radial-gradient(#1fe4f5, #3fbafe);
+}
+
+.chips-hawa-cards.cards .card-2 {
+  background: radial-gradient(#fbc1cc, #fa99b2);
+}
+
+.chips-hawa-cards.cards .card {
+  background: radial-gradient(#76b2fe, #b69efe);
+  border: 2px solid #0198ef;
+}
+
+.chips-hawa-cards.cards .card-4 {
+  background: radial-gradient(#33cb94, #1aab9c);
+  border: 2px solid #008900;
+}
+
+.chips-hawa-cards.cards .card-5 {
+  border: 2px solid #ef0101;
+  background: radial-gradient(rgb(219 97 113), rgb(255 131 131));
+}
+
+.chips-hawa-oi-ratio,
+.chips-hawa-pcr-ratio {
+  display: inline;
+  padding: 1px 4px;
+  background: #b3e8f1;
+  margin: 2px;
+  margin-left: 10px;
+  border: 1px solid;
+  border-radius: 10%;
+  font-weight: normal;
+}
+
+.chips-hawa-pcr-ratio.p-hawa{
+  margin: 2px 10px 2px 2px;
+  background: #e7ed1a;
+}
+
+/* CHIPS and HAWA controls menu*/
+.chips-hawa-menu {
+  top: 48%;
+  right: 0;
+  z-index: 1;
+  background: #fff;
+  position: fixed;
+  border-radius: 0px 3px 3px 0px;
+}
+
+.chips-hawa-menu a{
+  display: block;
+  text-align: center;
+  padding: 10px 10px;
+  color: #fbfbfb;
+  background: #5baddf;
+  border: 2px solid #25f4ff;
+}
+.chips-hawa-menu a,
+.chips-hawa-menu a:hover,
+.chips-hawa-menu a:active,
+.chips-hawa-menu a:visited,
+.chips-hawa-menu a:focus {
+  text-decoration: none;
+}
+
+.chips-hawa-menu a span{
+  display: block;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chips-hawa-menu a.settings span{
+  font-size: 27px;
+  line-height: 0.7;
+}
+
+.chips-hawa-cards.cards.settings {
+  font-family: sans-serif;
+}
+
+.chips-hawa-cards.cards.settings h3{
+    margin: 10px 0;
+}
+
+.chips-hawa-cards.cards.settings .card label{
+  display: block;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.chips-hawa-cards.cards.settings .card input{
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.chips-hawa-menu a i {
+  font-size: 30px;
+}
+
+.chips-hawa-highlight{
+  background-color: rgb(194, 221, 198) !important;
+}
+
+.chips-hawa-col-event{
+  cursor: pointer;
+}
+
+.chips-hawa-highlight .MuiBox-root{
+  font-weight: bold;
+}
+
+/* iCharts styles */
+.chips-hawa-asset-price-option{
+  padding: 8px 14px !important;
+  color: #fff;
+  font-weight: bolder;
+}
+
+.chips-hawa-OI-change{
+  background: #82ccc5 !important;
+}
+
+/* LTP Calculator */
+.chips-hawa-imaginary-line {
+  border-top: 2px solid red;
+}
+.chips-hawa-highlight-cell {
+  background: #8ac9ed !important;
+}
+.chips-hawa-highlight-int-cell{
+  background: #fd878782 !important;
+}
+.chips-hawa-error {
+  position: fixed;
+  top: 0;
+  z-index: 10000;
+  left: calc(50% - 170px);
+  background: #f53b3b;
+  color: white;
+}
+
+.chips-hawa-error p {
+  color: white;
+  padding: 0 20px;
+}
+
+/******** LTP OVERLAY **********/
+.chips-hawa-overlay::after{
+  content: "";
+  display: block;
+  position: fixed;
+  padding: 100px 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+}
+.chips-hawa-overlay.hide{
+  display: none;
+}
+
+.chips-hawa-ltp-content{
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  z-index: 10010;
+  width: 350px;
+  background: #fff;
+  padding: 0 15px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding-bottom: 15px;
+}
+
+.chips-hawa-ltp-content h4{
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 1px solid #000;
+}
+.chips-hawa-ltp-params{
+  width: 49.7%;
+  float: left;
+  border-right: 1px solid #000;
+}
+
+.chips-hawa-ltp-output {
+  width: 49.7%;
+  float: right;
+  font-weight: bolder;
+  font-size: 22px;
+  color: #008900;
+}
+
+.chips-hawa-ltp-output span{
+  text-align: center;
+  display: block;
+  
+}
+
+.chips-hawa-ltp-output .output-price{
+  padding-top: 35%;
+}
+
+.chips-hawa-ltp-output .output-sl{
+  margin-top: 25%;
+  border-top: 1px solid black;
+}
+
+.chips-hawa-ltp-output.bearish{
+  color: #ff0000a2;
+}
+
+.chips-hawa-clearfix:after {
+  content:"";
+  display:block;
+  clear:both;
+}
+
+.chips-hawa-ltp-params .ltp-params-item .key{
+  font-weight: bold;
+}
+
+.chips-hawa-ltp-output .output-price{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#oc-table-head-group{
+  z-index: 100;
+}
+
+.chips-hawa-buttons-call,
+.chips-hawa-buttons-put{
+  width: 100%;
+  height: 100%;
+}
+
+.chips-hawa-ltp-trigger {
+  position: relative;
+  z-index: 99;
+  display: block;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 11px;
+  padding: 1px 5px;
+  margin: 1px 5px;
+  background: #6d93e4;
+  border: 1px solid #000;
+}
+
+.chips-hawa-overlay.ichart h4{
+  font-size: 20px;
+}
+
+.chips-hawa-overlay.ichart .ltp-params-item{
+  padding: 7px 2px;
+  font-size: 16px;
+}
+
+.chips-hawa-overlay.ichart .chips-hawa-ltp-output .output-sl{
+  margin-top: 30%;
+  padding-top: 10%;
+}
+
+.chips-hawa-overlay.ichart .chips-hawa-ltp-output .output-price{
+  font-size: 28px;
+}
+
+/* iChart Screener Data grid styles */
+.chips-hawa-rating{
+  padding: 0 !important;
+}
+
+.chips-hawa-BEARISH{
+  padding: 8px 10px;
+  background: #e32727;
+  color: white;
+}
+
+.chips-hawa-BULLISH{
+  padding: 8px 10px;
+  background: #16971f;
+  color: white;
+}
+
+.chips-hawa-SIDEWAYS{
+  padding: 8px 10px;
+  background: #c5b412;
+  color: white;
+}
+
+.chips-hawa-NEUTRAL{
+  padding: 8px 10px;
+}
+
+#option-screener_wrapper{
+  padding: 0 50px 50px 50px;
+}
+
+#option-SR-scan_filter,
+#option-screener_filter {
+  display: block !important;
+}
+
+#ichart-utility-buttons{
+  padding: 25px 0 50px 50px;
+}
+
+.chips-hawa-analysis-table td {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
+
+.chips-hawa-analysis-table{
+  padding: 0 0 50px 50px;
+  display: inline-block;
+}
+.chips-hawa-analysis-table td.right-align-text{
+  text-align: right;
+}
+
+.chips-hawa-analysis-table td span{
+  display: block;
+}
+
+.chips-hawa-analysis-table td span.cnt{
+  margin-top: 10px;
+}
+
+.chips-hawa-select-stock{
+  text-decoration: none;
+  color: #428bca;
+}
+
+#option-screener_wrapper table.dataTable.display tbody tr:hover>.sorting_1,
+#option-screener_wrapper table.dataTable.display tbody tr:hover {
+  background-color: #c7e5e5;
+}
+
+#option-screener_wrapper table.dataTable.display tbody td{
+  padding: 10px;
+  position: relative;
+}
+
+.chips-hawa-tooltip-12{
+  margin-left: 10px;
+  background: #3f86c8;
+  padding: 2px 6px;
+  border-radius: 50%;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.chips-hawa-tooltip {
+  position: relative;
+}
+
+.chips-hawa-tooltip-content {
+  position: absolute;
+  z-index: 1001;
+  display: none;
+  border: 2px solid #ebebeb;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #fff;
+  left: 100%;
+  width: 250px;
+  top: 0;
+  -webkit-box-shadow: -3px -5px 41px 1px rgba(0,0,0,0.36);
+  -moz-box-shadow: -3px -5px 41px 1px rgba(0,0,0,0.36);
+  box-shadow: -3px -5px 41px 1px rgba(0,0,0,0.36);
+}
+.chips-hawa-tooltip-content.theta-analysis{
+  width: 150px;
+}
+.chips-hawa-tooltip-content p{
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.chips-hawa-tooltip-content.oi-ratio{
+  width: fit-content;
+  background: #02071e;
+  color: #fff;
+  border: 1px solid #fff;
+  white-space: nowrap;
+  padding: 0 4px;
+  font-size: 11.5px;
+  margin-bottom: 0;
+}
+
+.chips-hawa-tv_link {
+  display: inline-block;
+  margin-left: 10px;
+  text-decoration: none;
+}
+.chips-hawa-tv_link img{
+  height: 12px;
+  width: 18px;
+}
+.chips-hawa-theta-bearish{
+  color: #e32727
+}
+
+.chips-hawa-theta-bullish{
+  color: #16971f
+}
+
+.chips-hawa-relative{
+  position: relative;
+}

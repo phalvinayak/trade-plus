@@ -1,0 +1,93 @@
+let dt=new Date;const MONTHS=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],CUR_MONTH=""+MONTHS[dt.getMonth()]+dt.getFullYear()%100,NEXT_MONTH=""+MONTHS[(dt.getMonth()+1)%12]+(11==dt.getMonth()?dt.getFullYear()%100+1:dt.getFullYear()%100),OPT_EXP_DATE=getMonthlyExpDate(),USER_NAME=$("#userName").val(),SESSION_ID=$("#sessionID").val(),SYMB_TYPE=$("#SymbType").val(),STRIKE_TYPE="mainstrikes",D_TYPE=$("input[name=rdDataType]:checked").val(),TXT_DATE=$("#defaultDate").val(),COL_MAP={CALL_OI_CHANGE:9,CE_DELTA:6,CE_THETA:4,CALL_OI:10,STRIKE_PRICE:17,CE_VWAP:14,PE_VWAP:20,PUT_OI:24,PUT_OI_CHANGE:25,CE_LTP:13,PE_LTP:21,PE_DELTA:28,PE_THETA:30,OI_PCR:32};let STOCK_PRICE_MAP={},SECTOR_MAP={};function getMonthlyExpDate(){let n=[],r=[],t;return $("#optExpDate option").each((t,e)=>{let a=$(e).attr("value").toUpperCase();a.includes(CUR_MONTH)?n.push(a):a.includes(NEXT_MONTH)&&r.push(a)}),t=(n.length?n:r).slice(-1),t[0]}let SCREENER_STATE="idle";if(location.href.endsWith("OptionChain.php")){let t="phalvinayak"==USER_NAME?'<button class="ichart-sr-scan mdl-button mdl-button--raised mdl-button--colored">S/R Scan</button>':"";$("body").append(`
+        <div id="ichart-utility-buttons">
+            <button class="ichart-screener mdl-button mdl-button--raised mdl-button--colored">Stock Screener</button>
+            <button class="ichart-analyse mdl-button mdl-button--raised mdl-button--colored">OI Analyse</button>
+            ${t}
+        </div>
+    `),$("body").append('<div class="chips-hawa-oi-analysis-block"><p class="scan-time" style="font-style:italic;margin: 0px 50px"></p></div>');try{let t=localStorage.getItem("scanTime");if(t&&(scanDate=new Date(t),scanDate.getDate()==(new Date).getDate()&&scanDate.getMonth()==(new Date).getMonth())){let t=localStorage.getItem("filter")?JSON.parse(localStorage.getItem("filter")):{};renderScreenerDataTable(JSON.parse(localStorage.getItem("scannerData")),scanDate,t)}}catch(t){console.log(t)}}async function getHeatMapData(){try{var e=location.origin+"/opt/hcharts/stx8req/php/getDataForHeatmap_sectors.php";console.log("HeatMap",e);let t=new FormData;t.append("rdDataType","latest"),t.append("optSymbol","NIFTY"),t.append("BoxSize","pricechg"),t.append("SelectedType","sectors"),t.append("optExpDate",OPT_EXP_DATE),t.append("dt",TXT_DATE),t.append("sessionID",SESSION_ID),t.append("userName",USER_NAME);const a=await axios.post(e,t),r={SYMBOL:0,SECTOR:1,PRICE_CHANGE:3,PREV_CLOSE:4,PRICE:5,OPEN:8,LOW:9,HIGH:10};a.data.forEach((t,e)=>{var a=t[r.SECTOR],n=t[r.PRICE_CHANGE];1<e&&"Sector Wise"!=a&&(e=t[r.SYMBOL].toUpperCase(),STOCK_PRICE_MAP[e]={symbol:e,sector:a,priceChange:n,prevClose:t[r.PREV_CLOSE],price:t[r.PRICE],open:t[r.OPEN],low:t[r.LOW],high:t[r.HIGH]},SECTOR_MAP[a]?SECTOR_MAP[a].count++:SECTOR_MAP[a]={up:0,down:0,count:1},0<=n?SECTOR_MAP[a].up++:SECTOR_MAP[a].down++)})}catch(t){console.log(t)}}async function analyseOptionChain(){await getHeatMapData();var n=["ACC","ADANIENT","ADANIPORTS","APOLLOHOSP","ASIANPAINT","BAJAJ-AUTO","BAJFINANCE","BHARTIARTL","CIPLA","COFORGE","DIVISLAB","DIXON","GODREJCP","GNFC","HDFCBANK","HDFC","INDUSINDBK","INDIAMART","INFY","INDIGO","LTTS","LTI","LUPIN","M&M","NAVINFLUOR","NAUKRI","POLYCAB","RELIANCE","TATACHEM","TCS","TITAN","UPL","PEL","GODREJPROP","SRTRANSFIN","DEEPAKNTR","MINDTREE","TATACOMM","MPHASIS","SRF","AARTIIND","MFSL","AXISBANK","PIIND","VOLTAS","SBICARD","TECHM","MCDOWELL-N","GRASIM","ICICIBANK","HDFCAMC","HEROMOTOCO","BATAINDIA","HDFCLIFE","TATACONSUM","KOTAKBANK","ULTRACEMCO","HCLTECH","LT","SBILIFE","PIDILITIND","DRREDDY","HINDUNILVR","BRITANNIA","MARUTI","ESCORTS"].sort();let t=[];let r=0;for(let a=0;a<n.length;a+=3){let e=[];for(let t=0;t<3&&a+t<n.length;t++)r++,e.push(getData(n[a+t]));var o=await Promise.all(e);t.push(...o),$(".ichart-screener").text(`Screening ${r} of `+n.length)}scannerData={stockData:t,sector:SECTOR_MAP};var e=new Date;localStorage.setItem("scannerData",JSON.stringify(scannerData)),localStorage.setItem("scanTime",e),renderScreenerDataTable(scannerData,e,{})}function renderScreenerDataTable(r,o,t){if(r){$("#option-screener_wrapper").length&&$("#option-screener").DataTable().clear().destroy(),$("body").append('<table id="option-screener" class="display" width="100%"></table>');let a=$("#option-screener").DataTable({data:r.stockData,filter:!0,searching:!0,iDisplayLength:25,columns:[{data:"symbol",title:"EQ Symbol",render:function(t,e,a){if("display"!==e)return t;e=r.sector[a.sector]||{up:0,down:0,count:0};return`<a href="#" class="chips-hawa-select-stock chips-hawa-tooltip">${t}</a>
+                            <a href="https://www.tradingview.com/chart?symbol=NSE:${t.replace(/[\&\-]/g,"_")}&interval=5" target="_blank" class="chips-hawa-tv_link">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAzNiAyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQgMjJIN1YxMUgwVjRoMTR2MTh6TTI4IDIyaC04bDcuNS0xOGg4TDI4IDIyeiIgZmlsbD0iY3VycmVudENvbG9yIj48L3BhdGg+PGNpcmNsZSBjeD0iMjAiIGN5PSI4IiByPSI0IiBmaWxsPSJjdXJyZW50Q29sb3IiPjwvY2lyY2xlPjwvc3ZnPg=="/>
+                            </a>
+                            <div class="chips-hawa-tooltip-content">
+                                <p><strong>Sector</strong> : ${a.sector}</p>
+                                <p><strong>UP</strong> : ${e.up}</p>
+                                <p><strong>DOWN</strong> : ${e.down}</p>
+                                <p><strong>Total Stocks in FnO</strong> : ${e.count}</p>
+                            </div>`}},{className:"chips-hawa-rating",data:"spotPrice",title:"Spot Price",render:function(t,e,a){return"display"===e?"BEARISH"==a.rating.toUpperCase()&&parseFloat(t)>parseFloat(a.strikePrice)?`<div class="chips-hawa-BEARISH">${t}</div>`:"BULLISH"==a.rating.toUpperCase()&&parseFloat(t)<parseFloat(a.strikePrice)?`<div class="chips-hawa-BULLISH">${t}</div>`:`<div class="chips-hawa-NEUTRAL">${t}</div>`:t},searchable:!0},{data:"futPrice",title:"Fut Price(%)",searchable:!1},{data:"high",title:"High",searchable:!1},{data:"low",title:"Low",searchable:!1},{data:"strikePrice",title:"Strike Price",searchable:!1},{data:"CE",title:"CE-PI-Chg",searchable:!1},{data:"PE",title:"PE-OI-Chg",searchable:!1},{data:"ratio",title:"Ratio",searchable:!1},{data:"factor",title:"Factor",searchable:!1},{data:"oiPCR",title:"OI-PCR",searchable:!1},{className:"chips-hawa-rating",data:"rating",title:"Rating",render:function(t,e){return"display"===e?`<div class="chips-hawa-${t}">${t}</div>`:t}}],search:t,order:t.order||[0,"desc"]});a.on("order.dt",function(){var e=a.order();if(e&&e[0]){let t=localStorage.getItem("filter")?JSON.parse(localStorage.getItem("filter")):{};t.order=e[0],localStorage.setItem("filter",JSON.stringify(t))}}).on("error.dt",function(t,e,a,n){console.log("An error has been reported by DataTables: ",n)}),$("#option-screener_filter").append(`<label>&nbsp;&nbsp; Price Range: <select name="price-filter" id="price-filter">
+        <option value="0-100000">All</option>
+        <option value="0-500">0-500</option>
+        <option value="500-1000">500-1000</option>
+        <option value="1000-2000">1000-2000</option>
+        <option value="2000-100000">2000+</option>
+    </select></label>`),$("#option-screener_length").append(`<span style="margin-left:20px; font-style:italic">Scanned at ${padDate(o.getHours())}:${padDate(o.getMinutes())}</span>
+    <button class="chips-hawa-export-scan mdl-button mdl-button--raised mdl-button--colored" style="margin:0 0 5px 10px">Export CSV</button>`),$("#price-filter").on("change",t=>{a.draw()}),$("body").on("click",".chips-hawa-select-stock",t=>{t.preventDefault(),t.stopPropagation(),$("#optExpDate").append(`<option value="${OPT_EXP_DATE}" selected="selected">${OPT_EXP_DATE}</option>`),$(`#optSymbol option[value="${t.target.innerText.trim()}"]`).attr("selected","selected"),$("button[name=btnSubmit]").trigger("click")}),t["price-filter"]&&setTimeout(()=>{$("#price-filter").val(t["price-filter"]).trigger("change")},200),$("#option-screener_filter").find("input, select").on("blur",t=>{let e=localStorage.getItem("filter")?JSON.parse(localStorage.getItem("filter")):{};e[t.target.name||"search"]=t.target.value,localStorage.setItem("filter",JSON.stringify(e))}),$(".chips-hawa-export-scan").on("click",t=>{t.preventDefault();const e=r.stockData,a=(t,e)=>null===e?"":e,n=Object.keys(e[0]);t=[n.map(t=>t.toUpperCase()).join(","),...e.map(e=>n.map(t=>JSON.stringify(e[t],a)).join(","))].join("\r\n");download(t,`scan-${getDateTime(o)}.csv`,"text/plain")}),$("body").on("mouseenter",".chips-hawa-tooltip",t=>{$(t.target).closest("td").find(".chips-hawa-tooltip-content").show()}).on("mouseleave",".chips-hawa-tooltip",t=>{$(t.target).closest("td").find(".chips-hawa-tooltip-content").hide()})}}async function getData(n){try{var e=`${location.origin}/opt/OptionChainTable.php?txtDate=${TXT_DATE}&optSymbol=${encodeURIComponent(n)}&optExpDate=${OPT_EXP_DATE}&dType=${D_TYPE}&striketype=mainstrikes&SymbType=${SYMB_TYPE}&sessionID=${SESSION_ID}&userName=`+USER_NAME,a=location.origin+"/opt/hcharts/stx8req/php/getLatestSpotPrice_imp.php";let t=new FormData;t.append("monthlyExpDate","undefined"),t.append("optSymbol",n),t.append("optExpDate",OPT_EXP_DATE);var r=await Promise.all([axios.post(e,{}),axios.post(a,t)]);try{var o=r[0].data,s=r[1].data;let t=o.aaData,e=parseFloat(o.strikePriceATM).toFixed(2);var i=t.find(t=>parseFloat(t[COL_MAP.STRIKE_PRICE]).toFixed(2)==e),l=getOIChangeRation(parseInt(getNumber(i[COL_MAP.CALL_OI_CHANGE])),parseInt(getNumber(i[COL_MAP.PUT_OI_CHANGE])));let a=STOCK_PRICE_MAP[n.toUpperCase()];return a=a||{symbol:n,sector:"unknown",priceChange:0,prevClose:0,price:0,open:0,low:0,high:0},{symbol:n,spotPrice:s[1],futPrice:`${a.price} (${a.priceChange}%)`,sector:a.sector,high:a.high,low:a.low,strikePrice:e,CE:i[COL_MAP.CALL_OI_CHANGE],PE:i[COL_MAP.PUT_OI_CHANGE],ratio:l.OIChangeRatio,factor:l.factor,oiPCR:i[COL_MAP.OI_PCR],rating:l.rating}}catch(t){return console.log(t),{symbol:n,sector:"unknown",spotPrice:0,futPrice:"0 (0%)",high:0,low:0,strikePrice:0,CE:0,PE:0,ratio:0,factor:0,oiPCR:0,rating:"SIDEWAYS"}}}catch(t){console.log(t)}}function getOIChangeRation(t,e){let a="SIDEWAYS",n="∞",r="100000";return n=0<t&&0<e?e<t?(ratio=t/e,2<ratio&&(a="BEARISH"),r=parseFloat(ratio).toFixed(2),r+" :: 1"):(ratio=e/t,2<ratio&&(a="BULLISH"),r=parseFloat(ratio).toFixed(2),"1 :: "+r):t<0&&e<0?e<t?(ratio=-1*e/(-1*t),2<ratio&&(a="BEARISH"),r=parseFloat(ratio).toFixed(2),n="1 :: "+r):(ratio=-1*t/(-1*e),2<ratio&&(a="BULLISH"),r=parseFloat(ratio).toFixed(2),r+" :: 1"):(e<t?a="BEARISH":t<e&&(a="BULLISH"),"∞"),{OIChangeRatio:n,rating:a,factor:r}}function getDateTime(t){t=t||new Date;return`${t.getFullYear()}-${t.getMonth()+1}-${padDate(t.getDate())}@`+padDate(t.getHours())+padDate(t.getMinutes())+padDate(t.getSeconds())}function getNumber(t){return isNumeric(""+t)?t:0}function isNumeric(t){return"string"==typeof t&&(!isNaN(t)&&!isNaN(parseFloat(t)))}async function analyseOptions(){let t=$("#optSymbol").val(),e=$("#optExpDate").val();let a=TXT_DATE;"hist"==D_TYPE&&(e=$("#optExpDate_hist").val(),a=$("#txtDate").val());var n=`${location.origin}/opt/OptionChainTable.php?txtDate=${a}&optSymbol=${encodeURIComponent(t)}&optExpDate=${e}&dType=${D_TYPE}&striketype=allstrikes&SymbType=${SYMB_TYPE}&sessionID=${SESSION_ID}&userName=`+USER_NAME;let r=(await axios.post(n,{})).data;var o=parseFloat(r.futuresClosingPrice.replace(/\,/,""));let s=parseFloat(r.strikePriceATM).toFixed(2);var i=r.aaData.findIndex(t=>parseFloat(t[COL_MAP.STRIKE_PRICE]).toFixed(2)==s),l=getOIDataStats(r.aaData,o,i),n=Math.max(i-10,0),i=Math.min(i+10,r.aaData.length),o=getOIDataStats(r.aaData.slice(n,i),o,s);$(".chips-hawa-oi-analysis-block .chips-hawa-analysis-table").remove(),$(".chips-hawa-oi-analysis-block .theta-analysis").remove();let _=new Date;$(".chips-hawa-oi-analysis-block .scan-time").text(`${t.toUpperCase()}, Scanned at ${padDate(_.getHours())}:`+padDate(_.getMinutes())),renderOIDataStats(l,"All Strikes"),renderOIDataStats(o,"Near ATM Strikes")}function getOIDataStats(t,a,n){let r={CE_TOTAL_OI:0,CE_TOTAL_OI_CNT:0,CE_OI_ITM:0,CE_OI_ITM_CNT:0,CE_TOTAL_OI_CHANGE:0,CE_TOTAL_OI_CHANGE_CNT:0,CE_OI_CHANGE_ITM:0,CE_OI_CHANGE_ITM_CNT:0,CE_THETA:0,CE_ITM_ATM_OI:0,CE_ITM_ATM_OI_CHG:0,PE_TOTAL_OI:0,PE_TOTAL_OI_CNT:0,PE_OI_ITM:0,PE_OI_ITM_CNT:0,PE_TOTAL_OI_CHANGE:0,PE_TOTAL_OI_CHANGE_CNT:0,PE_OI_CHANGE_ITM:0,PE_OI_CHANGE_ITM_CNT:0,PE_THETA:0,PE_ITM_ATM_OI:0,PE_ITM_ATM_OI_CHG:0};return t.forEach((t,e)=>{a>parseFloat(t[COL_MAP.STRIKE_PRICE])&&(r.CE_OI_ITM+=getNumber(t[COL_MAP.CALL_OI])*getNumber(t[COL_MAP.CE_LTP]),r.CE_OI_ITM_CNT+=+getNumber(t[COL_MAP.CALL_OI]),r.CE_OI_CHANGE_ITM+=getNumber(t[COL_MAP.CALL_OI_CHANGE])*getNumber(t[COL_MAP.CE_LTP]),r.CE_OI_CHANGE_ITM_CNT+=+getNumber(t[COL_MAP.CALL_OI_CHANGE])),a<=parseFloat(t[COL_MAP.STRIKE_PRICE])&&(r.PE_OI_ITM+=getNumber(t[COL_MAP.PUT_OI])*getNumber(t[COL_MAP.PE_LTP]),r.PE_OI_ITM_CNT+=+getNumber(t[COL_MAP.PUT_OI]),r.PE_OI_CHANGE_ITM+=getNumber(t[COL_MAP.PUT_OI_CHANGE])*getNumber(t[COL_MAP.PE_LTP]),r.PE_OI_CHANGE_ITM_CNT+=+getNumber(t[COL_MAP.PUT_OI_CHANGE])),r.CE_TOTAL_OI+=getNumber(t[COL_MAP.CALL_OI])*getNumber(t[COL_MAP.CE_LTP]),r.CE_TOTAL_OI_CNT+=+getNumber(t[COL_MAP.CALL_OI]),r.CE_TOTAL_OI_CHANGE+=getNumber(t[COL_MAP.CALL_OI_CHANGE])*getNumber(t[COL_MAP.CE_LTP]),r.CE_TOTAL_OI_CHANGE_CNT+=+getNumber(t[COL_MAP.CALL_OI_CHANGE]),r.CE_THETA+=+getNumber(t[COL_MAP.CE_THETA]),r.PE_TOTAL_OI+=getNumber(t[COL_MAP.PUT_OI])*getNumber(t[COL_MAP.PE_LTP]),r.PE_TOTAL_OI_CNT+=+getNumber(t[COL_MAP.PUT_OI]),r.PE_TOTAL_OI_CHANGE+=getNumber(t[COL_MAP.PUT_OI_CHANGE])*getNumber(t[COL_MAP.PE_LTP]),r.PE_TOTAL_OI_CHANGE_CNT+=+getNumber(t[COL_MAP.PUT_OI_CHANGE]),r.PE_THETA+=+getNumber(t[COL_MAP.PE_THETA]),t[COL_MAP.STRIKE_PRICE]<=n&&(r.CE_ITM_ATM_OI+=+getNumber(t[COL_MAP.CALL_OI]),r.CE_ITM_ATM_OI_CHG+=+getNumber(t[COL_MAP.CALL_OI_CHANGE])),t[COL_MAP.STRIKE_PRICE]<=n&&(r.PE_ITM_ATM_OI+=+getNumber(t[COL_MAP.PUT_OI]),r.PE_ITM_ATM_OI_CHG+=+getNumber(t[COL_MAP.PUT_OI_CHANGE]))}),r}function renderOIDataStats(t,e){$(".chips-hawa-oi-analysis-block").append(`<table class="chips-hawa-analysis-table">
+      <tr>
+        <td colspan="8">${e}</td>
+      </tr>  
+      <tr>
+        <td colspan="4">OI (EOD)</td>
+        <td colspan="4">OI Change (Intraday)</td>
+      </tr>
+      <tr>
+        <td>CE</td>
+        <td>ITM CE</td>
+        <td>PE</td>
+        <td>ITM PE</td>
+        <td>CE</td>
+        <td>ITM CE</td>
+        <td>PE</td>
+        <td>ITM PE</td>
+      </tr>
+      <tr>
+        <td>
+            <span>${parseInt(t.CE_TOTAL_OI,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.CE_TOTAL_OI_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.CE_OI_ITM,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.CE_OI_ITM_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.PE_TOTAL_OI,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.PE_TOTAL_OI_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.PE_OI_ITM,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.PE_OI_ITM_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.CE_TOTAL_OI_CHANGE,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.CE_TOTAL_OI_CHANGE_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.CE_OI_CHANGE_ITM,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.CE_OI_CHANGE_ITM_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.PE_TOTAL_OI_CHANGE,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.PE_TOTAL_OI_CHANGE_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+        <td>
+            <span>${parseInt(t.PE_OI_CHANGE_ITM,10).toLocaleString("en-IN")}</span>
+            <span class="cnt">(${parseInt(t.PE_OI_CHANGE_ITM_CNT,10).toLocaleString("en-IN")})</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="right-align-text">
+            ${parseFloat(t.CE_OI_ITM/t.CE_TOTAL_OI*100).toFixed(2)}%
+            (${parseFloat(t.CE_OI_ITM_CNT/t.CE_TOTAL_OI_CNT*100).toFixed(2)}%)
+        </td>
+        <td colspan="2" class="right-align-text">
+            ${parseFloat(t.PE_OI_ITM/t.PE_TOTAL_OI*100).toFixed(2)}%
+            (${parseFloat(t.PE_OI_ITM_CNT/t.PE_TOTAL_OI_CNT*100).toFixed(2)}%)
+        </td>
+        <td colspan="2" class="right-align-text">
+            ${parseFloat(t.CE_OI_CHANGE_ITM/t.CE_TOTAL_OI_CHANGE*100).toFixed(2)}%
+            (${parseFloat(t.CE_OI_CHANGE_ITM_CNT/t.CE_TOTAL_OI_CHANGE_CNT*100).toFixed(2)}%)
+        </td>
+        <td colspan="2" class="right-align-text">
+            ${parseFloat(t.PE_OI_CHANGE_ITM/t.PE_TOTAL_OI_CHANGE*100).toFixed(2)}%
+            (${parseFloat(t.PE_OI_CHANGE_ITM_CNT/t.PE_TOTAL_OI_CHANGE_CNT*100).toFixed(2)}%)
+        </td>
+      </tr>
+    </table>`)}function nth(t){if(3<t&&t<21)return"th";switch(t%10){case 1:return"st";case 2:return"nd";case 3:return"rd";default:return"th"}}function padDate(t){return t=1==t.toString().length?"0"+t:t}$(".ichart-screener").on("click",async t=>{t.preventDefault(),t.stopPropagation(),"idle"==SCREENER_STATE&&(console.log("start"),SCREENER_STATE="running",await analyseOptionChain(),SCREENER_STATE="idle",$(".ichart-screener").text("Stock Screener"),console.log("end"))}),$(".ichart-analyse").on("click",async t=>{t.preventDefault(),t.stopPropagation(),"idle"==SCREENER_STATE&&(console.log("start"),SCREENER_STATE="running",await analyseSupportResistance(),SCREENER_STATE="idle",$(".ichart-analyse").text("OI ANALYSE"),console.log("end"))}),$(".ichart-sr-scan").on("click",async t=>{t.preventDefault(),t.stopPropagation(),"idle"==SCREENER_STATE&&(console.log("start"),SCREENER_STATE="running",await analyseSupportResistance(),SCREENER_STATE="idle",$(".ichart-sr-scan").text("S/R Scan"),console.log("end"))}),$.fn.dataTable.ext.errMode="none",$.fn.dataTable.ext.search.push(function(t,e,a){let n=$("#price-filter").val()?$("#price-filter").val():"0-100000";var r=n.split("-"),o=parseInt(r[0],10),r=parseInt(r[1],10),e=parseFloat(e[1])||0;return!!(isNaN(o)&&isNaN(r)||isNaN(o)&&e<=r||o<=e&&isNaN(r)||o<=e&&e<=r)});

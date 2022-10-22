@@ -1,0 +1,249 @@
+// @version=5
+// @author=Vinayak Phal
+// © phalvinayak
+// @desc=Trying to create all in one indicator for free version as Diwali Gift for Boss Upstox group
+
+// Utility Functions
+// ****************************************************************************************
+// Function to get MA based on input
+// Params type, src and length
+f_ma(type, src, length, display=true) => 
+    if(display)
+        customMA = switch type
+            "WMA" => ta.wma(src, length)
+            "SMA" => ta.sma(src, length)
+            "HMA" => ta.wma(2 * ta.wma(src, length/2) - ta.wma(src, length), math.round(math.sqrt(length)))
+            "RMA" => ta.rma(src, length)
+            "VWMA" => ta.vwma(src, length)
+            => ta.ema(src, length)
+        customMA
+    else
+        na
+// ****************************************************************************************
+
+// ****************************************************************************************
+indicator('Multiple Indicators', shorttitle='Vins⚜', format=format.price, precision=2, overlay=true)
+
+
+// Bollinger Band
+// ****************************************************************************************
+bool bbDisplayInput = input.bool(true, '', group='BB Settings', inline='BB-Params')
+string bbTypeInput = input.string(defval='SMA', title='MA', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='BB Settings', inline='BB-Params-1')
+int bbPeriodInput = input.int(20, '', minval=1, maxval=200, step=1, group='BB Settings', inline='BB-Params')
+color bbColorInput = input.color(color.new(color.silver, 85), 'Fill Color', group='BB Settings', inline='BB-Params')
+float bbDiviation = input.float(2, 'Div', group='BB Settings', inline='BB-Params-1')
+
+// the same on pine
+f_bb(src, length, mult) =>
+    float basis = f_ma(bbTypeInput, src, length)
+    float dev = mult * ta.stdev(src, length)
+    [basis, basis + dev, basis - dev]
+
+float bbMedian = na
+float bbUpper = na
+float bbLower = na
+color bbBorderColor = color.black
+if(bbDisplayInput)
+    [median, upper, lower] = f_bb(close, bbPeriodInput, bbDiviation)
+    bbMedian := median
+    bbUpper := upper
+    bbLower := lower
+    
+plot(bbMedian, title='BB-Median', color=bbBorderColor)
+upperBand = plot(bbUpper, title='BB-UpperBand', color=bbBorderColor)
+lowerBand = plot(bbLower, title='BB-LowerBand', color=bbBorderColor)
+fill(upperBand, lowerBand, color=bbColorInput)
+// ****************************************************************************************
+
+
+// Moving Average 1 
+// ****************************************************************************************
+bool ma1DisplayInput = input.bool(true, title='', group='Moving Average-1', inline='MA-1')
+ma1FieldInput = input.source(defval=high, title='', group='Moving Average-1', inline='MA-1')
+ma1TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='Moving Average-1', inline='MA-1')
+int ma1PeriodInput = input.int(10, title='', minval=1, maxval=300, step=1, group='Moving Average-1', inline='MA-1')
+color ma1ColorInput = input.color(color.blue, title='', group='Moving Average-1', inline='MA-1')
+
+ma1 = f_ma(ma1TypeInput, ma1FieldInput, ma1PeriodInput, ma1DisplayInput)
+plot(ma1, color=ma1ColorInput, title='MA-1', linewidth=1)
+// ****************************************************************************************
+
+
+// Moving Average 2
+// ****************************************************************************************
+bool ma2DisplayInput = input.bool(false, title='', group='Moving Average-2', inline='MA-2')
+ma2FieldInput = input.source(defval=high, title='', group='Moving Average-2', inline='MA-2')
+ma2TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='Moving Average-2', inline='MA-2')
+int ma2PeriodInput = input.int(20, title='', minval=1, maxval=300, step=1, group='Moving Average-2', inline='MA-2')
+color ma2ColorInput = input.color(color.yellow, title='', group='Moving Average-2', inline='MA-2')
+
+ma2 = f_ma(ma2TypeInput, ma2FieldInput, ma2PeriodInput, ma2DisplayInput)
+plot(ma2, color=ma2ColorInput, title='MA-2', linewidth=1)
+// ****************************************************************************************
+
+// Moving Average 3
+// ****************************************************************************************
+bool ma3DisplayInput = input.bool(false, title='', group='Moving Average-3', inline='MA-3')
+ma3FieldInput = input.source(defval=high, title='', group='Moving Average-3', inline='MA-3')
+ma3TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='Moving Average-3', inline='MA-3')
+int ma3PeriodInput = input.int(50, title='', minval=1, maxval=300, step=1, group='Moving Average-3', inline='MA-3')
+color ma3ColorInput = input.color(color.maroon, title='', group='Moving Average-3', inline='MA-3')
+
+ma3 = f_ma(ma3TypeInput, ma3FieldInput, ma3PeriodInput, ma3DisplayInput)
+plot(ma3, color=ma3ColorInput, title='MA-3', linewidth=1)
+// ****************************************************************************************
+
+// Moving Average 4
+// ****************************************************************************************
+bool ma4DisplayInput = input.bool(false, title='', group='Moving Average-4', inline='MA-4')
+ma4FieldInput = input.source(defval=high, title='', group='Moving Average-4', inline='MA-4')
+ma4TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "RMA", "WMA", "VWMA"], group='Moving Average-4', inline='MA-4')
+int ma4PeriodInput = input.int(100, title='', minval=1, maxval=300, step=1, group='Moving Average-4', inline='MA-4')
+color ma4ColorInput = input.color(color.lime, title='', group='Moving Average-4', inline='MA-4')
+
+ma4 = f_ma(ma4TypeInput, ma4FieldInput, ma4PeriodInput, ma4DisplayInput)
+plot(ma4, color=ma4ColorInput, title='MA-4', linewidth=1)
+// ****************************************************************************************
+
+// Moving Average 5
+// ****************************************************************************************
+bool ma5DisplayInput = input.bool(false, title='', group='Moving Average-5', inline='MA-5')
+ma5FieldInput = input.source(defval=high, title='', group='Moving Average-5', inline='MA-5')
+ma5TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='Moving Average-5', inline='MA-5')
+int ma5PeriodInput = input.int(150, title='', minval=1, maxval=300, step=1, group='Moving Average-5', inline='MA-5')
+color ma5ColorInput = input.color(color.navy, title='', group='Moving Average-5', inline='MA-5')
+
+ma5 = f_ma(ma5TypeInput, ma5FieldInput, ma5PeriodInput, ma5DisplayInput)
+plot(ma5, color=ma5ColorInput, title='MA-5', linewidth=1)
+// ****************************************************************************************
+
+// Moving Average 6
+// ****************************************************************************************
+bool ma6DisplayInput = input.bool(false, title='', group='Moving Average-6', inline='MA-6')
+ma6FieldInput = input.source(defval=high, title='', group='Moving Average-6', inline='MA-6')
+ma6TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='Moving Average-6', inline='MA-6')
+int ma6PeriodInput = input.int(200, title='', minval=1, maxval=300, step=1, group='Moving Average-6', inline='MA-6')
+color ma6ColorInput = input.color(color.teal, title='', group='Moving Average-6', inline='MA-6')
+
+ma6 = f_ma(ma6TypeInput, ma6FieldInput, ma6PeriodInput, ma6DisplayInput)
+plot(ma6, color=ma6ColorInput, title='MA-6', linewidth=1)
+// ****************************************************************************************
+
+// VWAP
+// ****************************************************************************************
+bool vwapDisplayInput = input.bool(false, '', group='VWAP Settings', inline='VWAP-Params')
+vwapSrcInput = input.source(defval=close, title='', group='VWAP Settings', inline='VWAP-Params')
+color vwapColorInput = input.color(color.fuchsia, '', group='VWAP Settings', inline='VWAP-Params')
+plot(vwapDisplayInput and timeframe.isintraday ? ta.vwap(vwapSrcInput) : na, color=vwapColorInput, title='VWAP', linewidth=1)
+// ****************************************************************************************
+
+
+// Pivot Point
+// *****************************************************************
+// Function to get the right duration based on the timeframe
+getResolution() =>
+    resolution = "M"
+    if timeframe.isintraday
+        resolution := timeframe.multiplier >= 60 ? "W" : "D"
+    else if timeframe.isdaily
+        resolution := "M"
+    else if timeframe.isweekly or timeframe.ismonthly
+        resolution := "12M"
+bool ppDisplayInput = input.bool(false, 'Plot?', group='Pivot Point', inline='PP')
+width = input.int(1, 'Width', minval=1, maxval=4, group='Pivot Point', inline='PP')
+bool s1R1DisplayInput = input.bool(true, 'S1/R1?', group='Pivot Point', inline='PP-l2')
+bool s2R2DisplayInput = input.bool(true, 'S2/R2?', group='Pivot Point', inline='PP-l2')
+bool s3R3DisplayInput = input.bool(true, 'S3/R3?', group='Pivot Point', inline='PP-l2')
+bool s4R4DisplayInput = input.bool(true, 'S4/R4?', group='Pivot Point', inline='PP-l2')
+
+resolution = getResolution()
+
+[xOpen, xHigh, xLow, xClose] = request.security(syminfo.tickerid, resolution, [open[1], high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+vR4 = ppDisplayInput ? xClose + (xHigh - xLow) * 1.1/2 : na
+vR3 = ppDisplayInput ? xClose + (xHigh - xLow) * 1.1/4 : na
+vR2 = ppDisplayInput ? xClose + (xHigh - xLow) * 1.1/6 : na
+vR1 = ppDisplayInput ? xClose + (xHigh - xLow) * 1.1/12 : na
+vS1 = ppDisplayInput ? xClose - (xHigh - xLow) * 1.1/12 : na
+vS2 = ppDisplayInput ? xClose - (xHigh - xLow) * 1.1/6 : na
+vS3 = ppDisplayInput ? xClose - (xHigh - xLow) * 1.1/4 : na
+vS4 = ppDisplayInput ? xClose - (xHigh - xLow) * 1.1/2 : na
+
+vS1Color = xOpen != xOpen[1] ? na : color.red
+vS2Color = xOpen != xOpen[1] ? na : color.fuchsia
+vS3Color = xOpen != xOpen[1] ? na : color.lime
+vS4Color = xOpen != xOpen[1] ? na : color.green
+vR1Color = xOpen != xOpen[1] ? na : color.aqua
+vR2Color = xOpen != xOpen[1] ? na : color.blue
+vR3Color = xOpen != xOpen[1] ? na : color.gray
+vR4Color = xOpen != xOpen[1] ? na : color.black
+
+plot(s1R1DisplayInput ? vR1 : na, color=vS1Color, title="R1", linewidth = width)
+plot(s2R2DisplayInput ? vR2 : na, color=vS2Color, title="R2", linewidth = width)
+plot(s3R3DisplayInput ? vR3 : na, color=vS3Color, title="R3", linewidth = width)
+plot(s4R4DisplayInput ? vR4 : na, color=vS4Color, title="R4", linewidth = width)
+plot(s1R1DisplayInput ? vS1 : na, color=vR1Color, title="S1", linewidth = width)
+plot(s2R2DisplayInput ? vS2 : na, color=vR2Color, title="S2", linewidth = width)
+plot(s3R3DisplayInput ? vS3 : na, color=vR3Color, title="S3", linewidth = width)
+plot(s4R4DisplayInput ? vS4 : na, color=vR4Color, title="S4", linewidth = width)
+// **********************************************************************
+
+
+//*************************SUPER TREND**************************************
+bool st1DisplayInput = input.bool(false, 'Plot?', group='Super Trend', inline='ST')
+st1AtrPeriod = input(21, 'ATR Len', group='Super Trend', inline='ST')
+st1Factor = input.float(7.0, "Factor", step = 0.01, group='Super Trend', inline='ST')
+
+[st1Supertrend, st1Direction] = ta.supertrend(st1Factor, st1AtrPeriod)
+
+st1BodyMiddle = plot((open + close) / 2, display=display.none)
+st1UpTrend = plot(st1DisplayInput? st1Direction < 0 ? st1Supertrend : na : na, "Up Trend", color = color.green, style=plot.style_linebr)
+st1DownTrend = plot(st1DisplayInput ? st1Direction < 0? na : st1Supertrend : na, "Down Trend", color = color.red, style=plot.style_linebr)
+
+fill(st1BodyMiddle, st1UpTrend, color.new(color.green, 90), fillgaps=false)
+fill(st1BodyMiddle, st1DownTrend, color.new(color.red, 90), fillgaps=false)
+//*************************SUPER TREND*******************************
+
+
+//*************************MOON CYCLE*******************************
+normalize(_v) =>
+    x = _v
+    x := x - math.floor(x)
+    if x < 0
+        x := x + 1
+    x
+
+calcPhase(_year, _month, _day) =>
+    int y = na
+    int m = na
+    float k1 = na 
+    float k2 = na 
+    float k3 = na
+    float jd = na
+    float ip = na
+
+    y := _year - math.floor((12 - _month) / 10)       
+    m := _month + 9
+    if m >= 12 
+        m := m - 12
+    
+    k1 := math.floor(365.25 * (y + 4712))
+    k2 := math.floor(30.6 * m + 0.5)
+    k3 := math.floor(math.floor((y / 100) + 49) * 0.75) - 38
+    
+    jd := k1 + k2 + _day + 59
+    if jd > 2299160
+        jd := jd - k3
+    
+    ip := normalize((jd - 2451550.1) / 29.530588853)
+    age = ip * 29.53
+
+age = calcPhase(year, month, dayofmonth)
+moon = 
+     math.floor(age)[1] > math.floor(age) ? 1 : 
+     math.floor(age)[1] < 15 and math.floor(age) >= 15 ? -1 : na
+
+
+plotshape(timeframe.isintraday ? moon==1 : na, "No Moon", shape.labelup, location.top, na, text="🌚", size=size.normal)
+plotshape(timeframe.isintraday ? moon==-1 : na, "Full Moon", shape.labeldown, location.bottom, na, text="🌝", size=size.normal)
+//*************************MOON CYCLE ENDS*******************************

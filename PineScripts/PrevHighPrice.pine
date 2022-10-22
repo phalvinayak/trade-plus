@@ -1,0 +1,20 @@
+// @version=5
+// @author=Vinayak Phal
+// @desc=To plot yesterday/lastWeek/lastMonth/lastYear High Price on the chart
+
+indicator('Vins High Price', shorttitle='Vins⚜HP', format=format.price, precision=2, overlay=true)
+
+// HIGH Price
+// High Price Marking yesterday Last week last month and last year
+// *****************************************************************
+dailyHigh = request.security(syminfo.tickerid, "D", high[1], lookahead = barmerge.lookahead_on)
+weeklyHigh = request.security(syminfo.tickerid, "W", high[1], lookahead = barmerge.lookahead_on)
+monthlyHigh = request.security(syminfo.tickerid, "M", high[1], lookahead = barmerge.lookahead_on)
+yearlyHigh = request.security(syminfo.tickerid, "12M", high[1], lookahead = barmerge.lookahead_on)
+
+plot(dailyHigh, color=color.blue, title="Daily High", linewidth = 2)
+plot(weeklyHigh, color=color.green, title="Weely High", linewidth = 2)
+plot(monthlyHigh, color=color.red, title="Monthly High", linewidth = 2)
+plot(yearlyHigh, color=color.aqua, title="Yearly High", linewidth = 2)
+// **********************************************************************
+// HIGH Price Ends

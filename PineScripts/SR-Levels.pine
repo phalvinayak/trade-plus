@@ -1,0 +1,63 @@
+//@version=5
+//@phalvinayak
+indicator("Nifty levels", shorttitle="SRLvls", overlay =true)
+
+//Daily
+r1s1 = input(true, title='R1/S1')
+r2s2 = input(true, title='R2/S2')
+r3s3 = input(true, title='R3/S3')
+r4s4 = input(false, title='R4/S4')
+d1 = input('30')
+
+f_newLine(_c, _s, _w) => line.new(na, na, na, na, xloc.bar_time, extend.none, _c, _s, _w)
+
+todayTime = request.security(syminfo.tickerid, "D", time, gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+day_ms = 86400000
+
+f_moveLine(_line, _x, _y) =>
+    today = timestamp(syminfo.timezone, year(todayTime), month(todayTime), dayofmonth(todayTime), 09, 15)
+    line.set_xy1(_line, _x, _y)
+    line.set_xy2(_line, today + day_ms, _y)
+
+is_newbar(res) =>
+    ta.change(time(res)) != 0
+
+adopt(r, s) =>
+    request.security(syminfo.tickerid, r, s)
+
+var line up = f_newLine(color.green, line.style_dotted, 4)
+var line down = f_newLine(color.red, line.style_dotted, 4)
+var line up1 = f_newLine(color.green, line.style_solid, 2)
+var line down1 = f_newLine(color.red, line.style_solid, 2)
+var line up2 = f_newLine(color.green, line.style_solid, 2)
+var line down2 = f_newLine(color.red, line.style_solid, 2)
+var line up3 = f_newLine(color.green, line.style_solid, 2)
+var line down3 = f_newLine(color.red, line.style_solid, 2)
+var line up4 = f_newLine(color.green, line.style_solid, 2)
+var line down4 = f_newLine(color.red, line.style_solid, 2)
+
+[yhigh,ylow,ytime] = request.security(syminfo.tickerid, "D", [high[1],low[1],time[1]], gaps=barmerge.gaps_off, lookahead=barmerge.lookahead_on)
+high30 = ta.valuewhen(is_newbar('D'), high, 0)
+low30 = ta.valuewhen(is_newbar('D'), low, 0)
+
+if barstate.islast and timeframe.isintraday
+    diff = yhigh - ylow
+    d2 = diff
+    d3 = diff * 0.5
+    d4 = diff * 0.75
+    d5 = diff * 0.25
+    
+    f_moveLine(up, ytime + day_ms, adopt(d1, high30))
+    f_moveLine(down, ytime + day_ms, adopt(d1, low30))
+    if r1s1
+        f_moveLine(up4, ytime + day_ms, adopt(d1, high30 + d5))
+        f_moveLine(down4, ytime + day_ms, adopt(d1, low30 - d5))
+    if r2s2
+        f_moveLine(up2, ytime + day_ms, adopt(d1, high30 + d3))
+        f_moveLine(down2, ytime + day_ms, adopt(d1, low30 - d3))
+    if r3s3
+        f_moveLine(up3, ytime + day_ms, adopt(d1, high30 + d4))
+        f_moveLine(down3, ytime + day_ms, adopt(d1, low30 - d4))
+    if r4s4
+        f_moveLine(up1, ytime + day_ms, adopt(d1, high30 + d2))
+        f_moveLine(down1, ytime + day_ms, adopt(d1, low30 - d2))

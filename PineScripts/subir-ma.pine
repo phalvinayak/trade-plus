@@ -1,0 +1,43 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © phalvinayak
+
+//@version=5
+// ****************************************************************************************
+indicator('Subir MA', shorttitle='Subir MA', format=format.price, precision=2, overlay=true)
+
+// Utility Functions
+// ****************************************************************************************
+// Function to get MA based on input
+// Params type, src and length
+f_ma(type, src, length, display=true) => 
+    if(display)
+        customMA = switch type
+            "WMA" => ta.wma(src, length)
+            "SMA" => ta.sma(src, length)
+            "HMA" => ta.wma(2 * ta.wma(src, length/2) - ta.wma(src, length), math.round(math.sqrt(length)))
+            "RMA" => ta.rma(src, length)
+            "VWMA" => ta.vwma(src, length)
+            => ta.ema(src, length)
+        customMA
+    else
+        na
+// ****************************************************************************************
+
+// Moving Average 1 
+// ****************************************************************************************
+bool ma1DisplayInput = input.bool(true, title='', group='Moving Average-1', inline='MA-1')
+ma1FieldInput = input.source(defval=high, title='', group='Moving Average-1', inline='MA-1')
+ma1TypeInput = input.string(defval='SMA', title='', options=["EMA", "SMA", "HMA", "RMA", "WMA", "VWMA"], group='Moving Average-1', inline='MA-1')
+int ma1PeriodInput = input.int(10, title='', minval=1, maxval=300, step=1, group='Moving Average-1', inline='MA-1')
+color ma1ColorInput = input.color(color.blue, title='', group='Moving Average-1', inline='MA-1')
+float bandRangeInput = input.float(5, "Band Range %", group='Moving Average-1', inline='MA-1-band', step = 0.1)
+color bandRangeColorInput = input.color(color.maroon, title='', group='Moving Average-1', inline='MA-1-band')
+
+ma1 = f_ma(ma1TypeInput, ma1FieldInput, ma1PeriodInput, ma1DisplayInput)
+rangeValue = ma1 * bandRangeInput / 100
+ma1UpperBand = ma1 + rangeValue
+ma1LowerBand = ma1 - rangeValue
+plot(ma1, color=ma1ColorInput, title='MA-1', linewidth=1)
+plot(ma1UpperBand, color = bandRangeColorInput, title='MA-1-Upper-Band', linewidth = 1)
+plot(ma1LowerBand, color = bandRangeColorInput, title='MA-1-Lower-Band', linewidth = 1)
+// ****************************************************************************************

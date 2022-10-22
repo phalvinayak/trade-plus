@@ -1,0 +1,85 @@
+Time ( 'NSE' ) : 1319.0
+Number ( '1520' ) : 1520.0
+PNL ( '6095926', '2' ) : -10862.50228881836
+PNL ( '6095926', '2' ) : -10862.50228881836
+Position ( RSI ( Symbol ( Instrument Name ( 'NSE_IDX,INDIA VIX,,,,,' ) , '3m', '100' ) , '14' ) , '-1' ) : 61.108962351638766
+Number ( '70' ) : 70.0
+Number ( '2000' ) : 2000.0
+Multiplier ( '6095926' ) : 10.0
+Number ( '-1000' ) : -1000.0
+Multiplier ( '6095926' ) : 10.0
+RSI ( Symbol ( Instrument Name ( 'NSE_IDX,INDIA VIX,,,,,' ) , '3m', '100' ) , '14' ) : time 2022-08-23 14:39:00+05:30 NaN 2022-08-23 14:42:00+05:30 NaN 2022-08-23 14:45:00+05:30 NaN 2022-08-23 14:48:00+05:30 NaN 2022-08-23 14:51:00+05:30 NaN ... 2022-08-24 13:06:00+05:30 59.676239 2022-08-24 13:09:00+05:30 52.308650 2022-08-24 13:12:00+05:30 55.967635 2022-08-24 13:15:00+05:30 61.108962 2022-08-24 13:18:00+05:30 57.494183 Length: 100, dtype: float64
+Days Difference (D2-D1) ( Today ( 'NSE' ) , Current Week Expiry ( 'NIFTY BANK', '0' ) ) : 1
+Number ( '1' ) : 1.0
+Days Difference (D2-D1) ( Today ( 'NSE' ) , Current Week Expiry ( 'NIFTY BANK', '0' ) ) : 1
+Number ( '1' ) : 1.0
+Today ( 'NSE' ) : 2022-08-24
+Current Week Expiry ( 'NIFTY BANK', '0' ) : 2022-08-25
+Symbol ( Instrument Name ( 'NSE_IDX,INDIA VIX,,,,,' ) , '3m', '100' ) : open high low close time 2022-08-23 14:39:00+05:30 19.0075 19.0500 18.9325 19.0500 2022-08-23 14:42:00+05:30 19.0400 19.0975 18.9875 19.0950 2022-08-23 14:45:00+05:30 19.0975 19.1150 19.0375 19.0925 2022-08-23 14:48:00+05:30 19.0925 19.1700 19.0775 19.1550 2022-08-23 14:51:00+05:30 19.1550 19.1800 19.0775 19.1000 ... ... ... ... ... 2022-08-24 13:06:00+05:30 18.8900 18.9000 18.8100 18.8200 2022-08-24 13:09:00+05:30 18.8300 18.8700 18.6800 18.7400 2022-08-24 13:12:00+05:30 18.7600 18.8400 18.7000 18.7900 2022-08-24 13:15:00+05:30 18.8100 18.8900 18.7100 18.8700 2022-08-24 13:18:00+05:30 18.8800 18.8800 18.8200 18.8300 [100 rows x 4 columns]
+Today ( 'NSE' ) : 2022-08-24
+Current Week Expiry ( 'NIFTY BANK', '0' ) : 2022-08-25
+Position ( CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) , '-1' ) : 38672.45
+Math Operation ( LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) , Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '3' ) , '/' ) , '+' ) : 39000.31588236491
+Position ( CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) , '-1' ) : 38672.45
+Math Operation ( LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) , Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '3' ) , '/' ) , '-' ) : 38744.08255513509
+Today ( 'NSE' ) : 2022-08-24
+Current Week Expiry ( 'NIFTY BANK', '0' ) : 2022-08-25
+Position ( CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) , '-1' ) : 38672.45
+Math Operation ( LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) , Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '2' ) , '/' ) , '+' ) : 39064.37421417236
+Position ( CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) , '-1' ) : 38672.45
+Math Operation ( LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) , Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '2' ) , '/' ) , '-' ) : 38680.02422332764
+Math Operation ( VWAP ( Traded Instrument Name ( '6095926', '2', 'Entry', 'instrument', 'NIFTY BANK', '1', '1', '1' ) , 'LTP' ) , VWAP ( Traded Instrument Name ( '6095926', '2', 'Entry', 'instrument', 'NIFTY BANK', '1', '1', '2' ) , 'LTP' ) , '+' ) : 427.79999999999995
+Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '1.2' ) , '*' ) : 461.21998901367186
+Instrument Name ( 'NSE_IDX,INDIA VIX,,,,,' ) : INDIA VIX
+CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) : time 2022-08-24 13:10:00+05:30 38718.45 2022-08-24 13:11:00+05:30 38720.40 2022-08-24 13:12:00+05:30 38714.10 2022-08-24 13:13:00+05:30 38720.45 2022-08-24 13:14:00+05:30 38715.10 2022-08-24 13:15:00+05:30 38706.90 2022-08-24 13:16:00+05:30 38714.65 2022-08-24 13:17:00+05:30 38691.55 2022-08-24 13:18:00+05:30 38672.45 2022-08-24 13:19:00+05:30 38672.95 Name: close, dtype: float64
+LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) : 38872.19921875
+Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '3' ) , '/' ) : 128.11666361490884
+CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) : time 2022-08-24 13:10:00+05:30 38718.45 2022-08-24 13:11:00+05:30 38720.40 2022-08-24 13:12:00+05:30 38714.10 2022-08-24 13:13:00+05:30 38720.45 2022-08-24 13:14:00+05:30 38715.10 2022-08-24 13:15:00+05:30 38706.90 2022-08-24 13:16:00+05:30 38714.65 2022-08-24 13:17:00+05:30 38691.55 2022-08-24 13:18:00+05:30 38672.45 2022-08-24 13:19:00+05:30 38672.95 Name: close, dtype: float64
+LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) : 38872.19921875
+Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '3' ) , '/' ) : 128.11666361490884
+CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) : time 2022-08-24 13:10:00+05:30 38718.45 2022-08-24 13:11:00+05:30 38720.40 2022-08-24 13:12:00+05:30 38714.10 2022-08-24 13:13:00+05:30 38720.45 2022-08-24 13:14:00+05:30 38715.10 2022-08-24 13:15:00+05:30 38706.90 2022-08-24 13:16:00+05:30 38714.65 2022-08-24 13:17:00+05:30 38691.55 2022-08-24 13:18:00+05:30 38672.45 2022-08-24 13:19:00+05:30 38672.95 Name: close, dtype: float64
+LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) : 38872.19921875
+Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '2' ) , '/' ) : 192.17499542236328
+CLOSE ( Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) ) : time 2022-08-24 13:10:00+05:30 38718.45 2022-08-24 13:11:00+05:30 38720.40 2022-08-24 13:12:00+05:30 38714.10 2022-08-24 13:13:00+05:30 38720.45 2022-08-24 13:14:00+05:30 38715.10 2022-08-24 13:15:00+05:30 38706.90 2022-08-24 13:16:00+05:30 38714.65 2022-08-24 13:17:00+05:30 38691.55 2022-08-24 13:18:00+05:30 38672.45 2022-08-24 13:19:00+05:30 38672.95 Name: close, dtype: float64
+LastRepairedIV ( '6095926', 'NIFTY BANK', 'EntryUnderlyingPrice' ) : 38872.19921875
+Math Operation ( Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) , Number ( '2' ) , '/' ) : 192.17499542236328
+VWAP ( Traded Instrument Name ( '6095926', '2', 'Entry', 'instrument', 'NIFTY BANK', '1', '1', '1' ) , 'LTP' ) : 106.1
+VWAP ( Traded Instrument Name ( '6095926', '2', 'Entry', 'instrument', 'NIFTY BANK', '1', '1', '2' ) , 'LTP' ) : 321.7
+Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) : 384.34999084472656
+Number ( '1.2' ) : 1.2
+Max_pnl ( '6095926', '2' ) : 0
+Math Operation ( Max_pnl ( '6095926', '2' ) , PNL ( '6095926', '2' ) , '-' ) : 10862.50228881836
+Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) : open high low close time 2022-08-24 13:10:00+05:30 38712.80 38721.95 38703.85 38718.45 2022-08-24 13:11:00+05:30 38719.25 38729.70 38717.30 38720.40 2022-08-24 13:12:00+05:30 38720.35 38723.45 38712.40 38714.10 2022-08-24 13:13:00+05:30 38712.60 38721.85 38710.55 38720.45 2022-08-24 13:14:00+05:30 38721.00 38722.35 38708.75 38715.10 2022-08-24 13:15:00+05:30 38712.35 38714.55 38703.95 38706.90 2022-08-24 13:16:00+05:30 38707.30 38719.95 38707.30 38714.65 2022-08-24 13:17:00+05:30 38715.35 38715.95 38687.15 38691.55 2022-08-24 13:18:00+05:30 38691.65 38692.20 38662.10 38672.45 2022-08-24 13:19:00+05:30 38673.50 38673.50 38672.95 38672.95
+Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) : 384.34999084472656
+Number ( '3' ) : 3.0
+Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) : open high low close time 2022-08-24 13:10:00+05:30 38712.80 38721.95 38703.85 38718.45 2022-08-24 13:11:00+05:30 38719.25 38729.70 38717.30 38720.40 2022-08-24 13:12:00+05:30 38720.35 38723.45 38712.40 38714.10 2022-08-24 13:13:00+05:30 38712.60 38721.85 38710.55 38720.45 2022-08-24 13:14:00+05:30 38721.00 38722.35 38708.75 38715.10 2022-08-24 13:15:00+05:30 38712.35 38714.55 38703.95 38706.90 2022-08-24 13:16:00+05:30 38707.30 38719.95 38707.30 38714.65 2022-08-24 13:17:00+05:30 38715.35 38715.95 38687.15 38691.55 2022-08-24 13:18:00+05:30 38691.65 38692.20 38662.10 38672.45 2022-08-24 13:19:00+05:30 38673.50 38673.50 38672.95 38672.95
+Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) : 384.34999084472656
+Number ( '3' ) : 3.0
+Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) : open high low close time 2022-08-24 13:10:00+05:30 38712.80 38721.95 38703.85 38718.45 2022-08-24 13:11:00+05:30 38719.25 38729.70 38717.30 38720.40 2022-08-24 13:12:00+05:30 38720.35 38723.45 38712.40 38714.10 2022-08-24 13:13:00+05:30 38712.60 38721.85 38710.55 38720.45 2022-08-24 13:14:00+05:30 38721.00 38722.35 38708.75 38715.10 2022-08-24 13:15:00+05:30 38712.35 38714.55 38703.95 38706.90 2022-08-24 13:16:00+05:30 38707.30 38719.95 38707.30 38714.65 2022-08-24 13:17:00+05:30 38715.35 38715.95 38687.15 38691.55 2022-08-24 13:18:00+05:30 38691.65 38692.20 38662.10 38672.45 2022-08-24 13:19:00+05:30 38673.50 38673.50 38672.95 38672.95
+Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) : 384.34999084472656
+Number ( '2' ) : 2.0
+Symbol ( Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) , '1m', '10' ) : open high low close time 2022-08-24 13:10:00+05:30 38712.80 38721.95 38703.85 38718.45 2022-08-24 13:11:00+05:30 38719.25 38729.70 38717.30 38720.40 2022-08-24 13:12:00+05:30 38720.35 38723.45 38712.40 38714.10 2022-08-24 13:13:00+05:30 38712.60 38721.85 38710.55 38720.45 2022-08-24 13:14:00+05:30 38721.00 38722.35 38708.75 38715.10 2022-08-24 13:15:00+05:30 38712.35 38714.55 38703.95 38706.90 2022-08-24 13:16:00+05:30 38707.30 38719.95 38707.30 38714.65 2022-08-24 13:17:00+05:30 38715.35 38715.95 38687.15 38691.55 2022-08-24 13:18:00+05:30 38691.65 38692.20 38662.10 38672.45 2022-08-24 13:19:00+05:30 38673.50 38673.50 38672.95 38672.95
+Math Operation ( Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) , Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) , '+' ) : 384.34999084472656
+Number ( '2' ) : 2.0
+Traded Instrument Name ( '6095926', '2', 'Entry', 'instrument', 'NIFTY BANK', '1', '1', '1' ) : OPTIDX_BANKNIFTY_25AUG2022_CE_38900
+Traded Instrument Name ( '6095926', '2', 'Entry', 'instrument', 'NIFTY BANK', '1', '1', '2' ) : OPTIDX_BANKNIFTY_25AUG2022_PE_38900
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) : 182.14999389648438
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) : 202.1999969482422
+Number ( '500' ) : 500.0
+Multiplier ( '6095926' ) : 10.0
+Max_pnl ( '6095926', '2' ) : 0.0
+PNL ( '6095926', '2' ) : -10862.50228881836
+Number ( '500' ) : 500.0
+Multiplier ( '6095926' ) : 10.0
+Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) : NIFTY BANK
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) : 182.14999389648438
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) : 202.1999969482422
+Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) : NIFTY BANK
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) : 182.14999389648438
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) : 202.1999969482422
+Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) : NIFTY BANK
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) : 182.14999389648438
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) : 202.1999969482422
+Instrument Name ( 'NFO,NIFTY BANK,,,,,' ) : NIFTY BANK
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '1' ) : 182.14999389648438
+Traded Instrument Name ( '6095926', '2', 'Entry', 'price', 'NIFTY BANK', '1', '1', '2' ) : 202.1999969482422

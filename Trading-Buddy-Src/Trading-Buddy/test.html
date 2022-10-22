@@ -1,0 +1,80 @@
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>Record type</td>
+    <td>Required</td>
+    <td>character varying(256)
+    </td>
+    <td>
+      <p>Type of the transaction&nbsp;</p>
+      <p>Refer to page : <a href="../data-dictionary#link-recordtypes" target="_blank">Data Dictionary Documentation</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Record subtype</td>
+    <td>Optional</td>
+    <td>character varying(256)</td>
+    <td>
+      <p>Subtype of the transaction</p>
+      <p>Refer to page : <a href="../data-dictionary#link-recordtypes" target="_blank">Data Dictionary Documentation</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Payment instrument type</td>
+    <td>Required</td>
+    <td>character varying(256)</td>
+    <td>
+      <p>The method of payment used to process the transaction.</p>
+      <p>Refer to page : <a href="../data-dictionary#link-paymentinstrumenttypeandpaymentinstrumentsubtype" target="_blank">Data Dictionary Documentation</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Payment instrument subtype</td>
+    <td>Required</td>
+    <td>character varying(256)</td>
+    <td>
+      <p>The specific tender used to process the transaction</p>
+      <p>Refer to page : <a href="../data-dictionary#link-paymentinstrumenttypeandpaymentinstrumentsubtype" target="_blank">Data Dictionary Documentation</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Transaction count</td>
+    <td>Required</td>
+    <td>numeric(23, 2)</td>
+    <td>Total number of transactions applicable for each category</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Gross amount</td>
+    <td>Required</td>
+    <td>numeric(23, 2)</td>
+    <td>
+      <p>Total amount of the transaction before any fee deductions</p>
+    </td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>PayPal fees&nbsp;</td>
+    <td>Optional</td>
+    <td>numeric(23, 2)</td>
+    <td>Total PayPal fees applicable for each transaction.</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Passthrough fees</td>
+    <td>Optional</td>
+    <td>numeric(23, 2)</td>
+    <td>Pass through fees applied to this transaction (sum of Total Interchange Fees + Total Scheme Fees)</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Total fees gross billed</td>
+    <td>Optional</td>
+    <td>numeric(23, 2)</td>
+    <td>This is the net disbursed amount (Gross Amount - Total fees net billed).</td>
+  </tr>
+</tbody>

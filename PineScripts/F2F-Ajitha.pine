@@ -1,0 +1,19 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © phalvinayak
+
+//@version=5
+strategy("F2F", overlay=true)
+
+longCondition = ta.crossover(ta.sma(close, 14), ta.sma(close, 28))
+if(longCondition)
+    strategy.entry("Long", strategy.long)
+
+shortCondition = ta.crossunder(ta.sma(close, 14), ta.sma(close, 28))
+if(shortCondition)
+    strategy.entry("Short", strategy.short)
+
+longExitCondition = ta.crossunder(ta.sma(close, 5), ta.sma(close,13))
+shortExitCondition = ta.crossover(ta.sma(close, 5), ta.sma(close,13))
+
+strategy.close("Long", when = longExitCondition)
+strategy.close("Short", when = shortExitCondition)

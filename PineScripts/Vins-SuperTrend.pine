@@ -1,0 +1,29 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © phalvinayak
+
+//@version=5
+strategy("Vins-SuperTrend", overlay=true, margin_long=100, margin_short=100, slippage=5, default_qty_value=1)
+
+bool st1DisplayInput = input.bool(true, 'Plot?', group='Super Trend', inline='ST')
+st1AtrPeriod = input(10, 'ATR Len', group='Super Trend', inline='ST')
+st1Factor = input.float(3.0, "Factor", step = 0.01, group='Super Trend', inline='ST')
+
+[st1Supertrend, st1Direction] = ta.supertrend(st1Factor, st1AtrPeriod)
+
+st1BodyMiddle = plot((open + close) / 2, display=display.none)
+st1UpTrend = plot(st1DisplayInput? st1Direction < 0 ? st1Supertrend : na : na, "Up Trend", color = color.green, style=plot.style_linebr)
+st1DownTrend = plot(st1DisplayInput ? st1Direction < 0? na : st1Supertrend : na, "Down Trend", color = color.red, style=plot.style_linebr)
+fill(st1BodyMiddle, st1UpTrend, color.new(color.green, 90), fillgaps=false)
+fill(st1BodyMiddle, st1DownTrend, color.new(color.red, 90), fillgaps=false)
+
+plot(ta.ema(close, 50), "50EMA", color=color.maroon)
+
+if(st1Direction != st1Direction[1] and st1Direction < 0 and close > ta.ema(close, 50) and hour<15)
+    strategy.close(id="Short")
+    strategy.entry("Long", strategy.long)
+
+if(st1Direction != st1Direction[1] and st1Direction > 0 and close < ta.ema(close, 50))
+    strategy.close(id="Long")
+    strategy.entry("Short", strategy.short)
+if(hour==15)
+    strategy.close_all()

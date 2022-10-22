@@ -1,0 +1,473 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// Original Idea of fixed pivot taken from https://www.tradingview.com/script/kIY0znXs-Volume-Profile-Fixed-Range/ by @LonesomeTheBlue
+// Modified teh idea of fixed pivot to for the day by dynamically calculating the no of bars from the day start based on the selected TF.
+// © phalvinayak
+
+//@version=5
+indicator("Vins⚜VP-Pivot", overlay = true, max_boxes_count = 200, max_bars_back = 501, max_lines_count=500, max_labels_count=500)
+
+// VOLUME PROFILE
+// *********************************Volume Profile STARTS********************************
+// bbars = input(title="Number of Bars", defval = 10, minval = 1, maxval = 500)
+cnum = input.int(title="Row Size", defval = 24, minval = 5, maxval = 100)
+percent = input.int(70, title="Value Area Volume %", minval = 0, maxval = 100)
+poc_color = input(defval = #ff0000, title = "POC Color", inline = "poc")
+poc_width = input.int(defval = 1, title = "Width", minval = 1, maxval = 5, inline = "poc")
+vup_color = input(defval = color.new(color.blue, 30), title = "Value Area Up")
+vdown_color = input(defval = color.new(color.orange, 30), title = "Value Area Down")
+up_color = input(defval = color.new(color.blue, 75), title = "UP Volume")
+down_color = input(defval = color.new(color.orange, 75), title = "Down Volume")
+
+var barIndex = 0
+var bbars = 10
+TZ = "GMT+5:30"
+
+barCount = 1
+for i = 0 to 400
+    barTime = time[i]
+    if(hour(time[i], TZ) == 9.0 and minute(time[i], TZ) == 15.0)
+        break
+    barCount := barCount + 1
+bbars := barCount
+
+top = ta.highest(bbars)
+bot = ta.lowest(bbars)
+dist = (top - bot) / 500
+step = (top - bot) / cnum
+
+// calculate/keep channel levels
+levels = array.new_float(cnum + 1)
+for x = 0 to cnum
+    array.set(levels, x, bot + step * x)
+
+// get the volume if there is intersection
+get_vol(y11, y12, y21, y22, height, vol)=> nz(math.max(math.min(math.max(y11, y12), math.max(y21, y22)) - math.max(math.min(y11, y12), math.min(y21, y22)), 0) * vol / height)
+
+if barstate.islast and timeframe.isintraday
+    // calculate/get volume for each channel and candle
+    volumes = array.new_float(cnum * 2, 0.)
+    for bars = 0 to bbars-1
+        body_top = math.max(close[bars], open[bars])
+        body_bot = math.min(close[bars], open[bars])
+        itsgreen = close[bars] >= open[bars]
+        
+        topwick = high[bars] - body_top
+        bottomwick = body_bot - low[bars]
+        body = body_top - body_bot
+        
+        bodyvol = body * volume[bars] / (2 * topwick + 2 * bottomwick + body)
+        topwickvol = 2 * topwick * volume[bars] / (2 * topwick + 2 * bottomwick + body)
+        bottomwickvol = 2 * bottomwick * volume[bars] / (2 * topwick + 2 * bottomwick + body)
+        for x = 0 to cnum - 1
+            array.set(volumes, x, array.get(volumes, x) + 
+                                  (itsgreen ? get_vol(array.get(levels, x), array.get(levels, x + 1), body_bot, body_top, body, bodyvol) : 0) + 
+                                  get_vol(array.get(levels, x), array.get(levels, x + 1), body_top, high[bars], topwick, topwickvol) / 2 + 
+                                  get_vol(array.get(levels, x), array.get(levels, x + 1), body_bot, low[bars], bottomwick, bottomwickvol) / 2)
+            array.set(volumes, x + cnum, array.get(volumes, x + cnum) + 
+                                  (itsgreen ? 0 : get_vol(array.get(levels, x), array.get(levels, x + 1), body_bot, body_top, body, bodyvol)) + 
+                                  get_vol(array.get(levels, x), array.get(levels, x + 1), body_top, high[bars], topwick, topwickvol) / 2 + 
+                                  get_vol(array.get(levels, x), array.get(levels, x + 1), body_bot, low[bars], bottomwick, bottomwickvol) / 2)
+
+    totalvols = array.new_float(cnum, 0.)
+    for x = 0 to cnum - 1
+        array.set(totalvols, x, array.get(volumes, x) + array.get(volumes, x + cnum))
+    
+    int poc = array.indexof(totalvols, array.max(totalvols))
+    
+    // calculate value area
+    totalmax = array.sum(totalvols) * percent / 100.
+    va_total = array.get(totalvols, poc)
+    int up = poc
+    int down = poc
+    for x = 0 to cnum - 1
+        if va_total >= totalmax
+            break
+        uppervol = up < cnum - 1 ? array.get(totalvols, up + 1) : 0.
+        lowervol = down > 0 ? array.get(totalvols, down - 1) : 0.
+        if uppervol == 0 and lowervol == 0
+            break
+        if uppervol >= lowervol
+            va_total += uppervol
+            up += 1
+        else
+            va_total += lowervol
+            down -= 1
+        
+    maxvol = array.max(totalvols)
+    for x = 0 to cnum * 2 - 1
+        array.set(volumes, x, array.get(volumes, x) * bbars / (3 * maxvol))
+    
+    
+    // Draw VP rows
+    var vol_bars = array.new_box(cnum * 2, na)
+    for x = 0 to cnum - 1
+        box.delete(array.get(vol_bars, x))
+        box.delete(array.get(vol_bars, x + cnum))
+        boxLeft = bar_index - bbars + 1
+        array.set(vol_bars, x, box.new(boxLeft, array.get(levels, x + 1) - dist, 
+                                       boxLeft + math.round(array.get(volumes, x)), array.get(levels, x) + dist, 
+                                       border_width = 0, 
+                                       bgcolor = x >= down and x <= up ? vup_color : up_color))
+        array.set(vol_bars, x + cnum, box.new(boxLeft + math.round(array.get(volumes, x)), array.get(levels, x + 1) - dist, 
+                                       boxLeft + math.round(array.get(volumes, x)) + math.round(array.get(volumes, x + cnum)), array.get(levels, x) + dist, 
+                                       border_width = 0, 
+                                       bgcolor = x >= down and x <= up ? vdown_color : down_color))
+    
+    // Draw POC line
+    var line poc_line = na
+    line.delete(poc_line)
+    poc_line := line.new(bar_index - bbars + 1, (array.get(levels, poc) + array.get(levels, poc + 1)) / 2, 
+                         bar_index + 2, (array.get(levels, poc) + array.get(levels, poc + 1)) / 2,
+                         color = poc_color, 
+                         width = poc_width)
+// *********************************Volume Profile END********************************
+
+                         
+// Pivot Point
+// *****************************************************************
+// Function to get the right duration based on the timeframe
+AUTO = "Auto"
+DAILY = "Daily"
+WEEKLY = "Weekly"
+MONTHLY = "Monthly"
+QUARTERLY = "Quarterly"
+YEARLY = "Yearly"
+BIYEARLY = "Biyearly"
+TRIYEARLY = "Triyearly"
+QUINQUENNIALLY = "Quinquennially"
+DECENNIALLY = "Decennially"
+
+kind = "Camarilla"
+pivot_time_frame = input.string(title="Pivots Timeframe", defval=AUTO, options=[AUTO, DAILY, WEEKLY, MONTHLY, QUARTERLY, YEARLY, BIYEARLY, TRIYEARLY, QUINQUENNIALLY, DECENNIALLY])
+look_back = input.int(title="Number of Pivots Back", defval=15, minval=1, maxval=5000)
+is_daily_based = input.bool(title="Use Daily-based Values", defval=true, tooltip="When this option is unchecked, Pivot Points will use intraday data while calculating on intraday charts. If Extended Hours are displayed on the chart, they will be taken into account during the pivot level calculation. If intraday OHLC values are different from daily-based values (normal for stocks), the pivot levels will also differ.")
+show_labels = input.bool(title="Show Labels", defval=true, inline="labels")
+position_labels = input.string("Left", "", options=["Left", "Right"], inline="labels")
+
+var DEF_COLOR = #FB8C00
+var arr_time = array.new_int()
+var p = array.new_float()
+p_show = input.bool(true, "Pivot", inline="P")
+p_color = input.color(DEF_COLOR, "", inline="P")
+var r1 = array.new_float()
+var s1 = array.new_float()
+s1r1_show = input.bool(true, "S1/R1", inline="S1/R1")
+s1r1_color = input.color(DEF_COLOR, "", inline="S1/R1")
+var r2 = array.new_float()
+var s2 = array.new_float()
+s2r2_show = input.bool(true, "S2/R2", inline="S2/R2")
+s2r2_color = input.color(DEF_COLOR, "", inline="S2/R2")
+var r3 = array.new_float()
+var s3 = array.new_float()
+s3r3_show = input.bool(true, "S3/R3", inline="S3/R3")
+s3r3_color = input.color(DEF_COLOR, "", inline="S3/R3")
+var r4 = array.new_float()
+var s4 = array.new_float()
+s4r4_show = input.bool(true, "S4/R4", inline="S4/R4")
+s4r4_color = input.color(DEF_COLOR, "", inline="S4/R4")
+var r5 = array.new_float()
+var s5 = array.new_float()
+s5r5_show = input.bool(true, "S5/R5", inline="S5/R5")
+s5r5_color = input.color(DEF_COLOR, "", inline="S5/R5")
+pivotX_open = float(na)
+pivotX_open := nz(pivotX_open[1], open)
+pivotX_high = float(na)
+pivotX_high := nz(pivotX_high[1], high)
+pivotX_low = float(na)
+pivotX_low := nz(pivotX_low[1], low)
+pivotX_prev_open = float(na)
+pivotX_prev_open := nz(pivotX_prev_open[1])
+pivotX_prev_high = float(na)
+pivotX_prev_high := nz(pivotX_prev_high[1])
+pivotX_prev_low = float(na)
+pivotX_prev_low := nz(pivotX_prev_low[1])
+pivotX_prev_close = float(na)
+pivotX_prev_close := nz(pivotX_prev_close[1])
+
+get_pivot_resolution() =>
+    resolution = "M"
+    if pivot_time_frame == AUTO
+        if timeframe.isintraday
+            resolution := timeframe.multiplier <= 15 ? "D" : "W"
+        else if timeframe.isweekly or timeframe.ismonthly
+            resolution := "12M"
+    else if pivot_time_frame == DAILY
+        resolution := "D"
+    else if pivot_time_frame == WEEKLY
+        resolution := "W"
+    else if pivot_time_frame == MONTHLY
+        resolution := "M"
+    else if pivot_time_frame == QUARTERLY
+        resolution := "3M"
+    else if pivot_time_frame == YEARLY or pivot_time_frame == BIYEARLY or pivot_time_frame == TRIYEARLY or pivot_time_frame == QUINQUENNIALLY or pivot_time_frame == DECENNIALLY
+        resolution := "12M"
+    resolution
+
+var lines = array.new_line()
+var labels = array.new_label()
+
+draw_line(i, pivot, col) =>
+    if array.size(arr_time) > 1
+        array.push(lines, line.new(array.get(arr_time, i), array.get(pivot, i), array.get(arr_time, i + 1), array.get(pivot, i), color=col, xloc=xloc.bar_time))
+
+draw_label(i, y, txt, txt_color) =>
+    if show_labels
+        offset = '‏  ‏  ‏  ‏  ‏'
+        labels_align_str_left= position_labels == "Left" ? txt + offset : offset + txt
+        x = position_labels == "Left" ? array.get(arr_time, i) : array.get(arr_time, i + 1)
+        array.push(labels, label.new(x = x, y=y, text=labels_align_str_left, textcolor=txt_color, style=label.style_label_center, color=#00000000, xloc=xloc.bar_time))
+camarilla() =>
+    pivotX_Median = (pivotX_prev_high + pivotX_prev_low + pivotX_prev_close) / 3
+    pivot_range = pivotX_prev_high - pivotX_prev_low
+    array.push(p, pivotX_Median)
+    array.push(r1, pivotX_prev_close + pivot_range * 1.1 / 12.0)
+    array.push(s1, pivotX_prev_close - pivot_range * 1.1 / 12.0)
+    array.push(r2, pivotX_prev_close + pivot_range * 1.1 / 6.0)
+    array.push(s2, pivotX_prev_close - pivot_range * 1.1 / 6.0)
+    array.push(r3, pivotX_prev_close + pivot_range * 1.1 / 4.0)
+    array.push(s3, pivotX_prev_close - pivot_range * 1.1 / 4.0)
+    array.push(r4, pivotX_prev_close + pivot_range * 1.1 / 2.0)
+    array.push(s4, pivotX_prev_close - pivot_range * 1.1 / 2.0)
+
+resolution = get_pivot_resolution()
+
+[sec_open, sec_high, sec_low, sec_close] = request.security(syminfo.tickerid, resolution, [open, high, low, close], lookahead = barmerge.lookahead_on)
+sec_open_gaps_on = request.security(syminfo.tickerid, resolution, open, gaps = barmerge.gaps_on, lookahead = barmerge.lookahead_on)
+
+custom_years_divisor = switch pivot_time_frame
+    BIYEARLY => 2
+    TRIYEARLY => 3
+    QUINQUENNIALLY => 5
+    DECENNIALLY => 10
+    => -1
+
+is_change_years = false 
+if custom_years_divisor > 0 and ta.change(time(resolution))
+    is_change_years := year % custom_years_divisor == 0
+
+
+
+var is_change = false
+var uses_current_bar = false
+var change_time = int(na)
+is_time_change = (ta.change(time(resolution)) and custom_years_divisor == -1) or is_change_years
+if is_time_change
+    change_time := time
+
+
+if (not uses_current_bar and is_time_change) or (uses_current_bar and not na(sec_open_gaps_on))
+    if is_daily_based and custom_years_divisor == -1
+        pivotX_prev_open := sec_open[1]
+        pivotX_prev_high := sec_high[1]
+        pivotX_prev_low := sec_low[1]
+        pivotX_prev_close := sec_close[1]
+        pivotX_open := sec_open
+        pivotX_high := sec_high
+        pivotX_low := sec_low
+    else
+        pivotX_prev_high := pivotX_high
+        pivotX_prev_low := pivotX_low
+        pivotX_prev_open := pivotX_open
+        pivotX_open := open
+        pivotX_high := high
+        pivotX_low := low
+        pivotX_prev_close := close[1]
+
+    if barstate.islast and not is_change and  array.size(arr_time) > 0
+        array.set(arr_time, array.size(arr_time) - 1, change_time)
+    else
+        array.push(arr_time, change_time)
+
+    camarilla()
+
+    if array.size(arr_time) > look_back
+        if array.size(arr_time) > 0
+            array.shift(arr_time)
+        if array.size(p) > 0 and p_show
+            array.shift(p)
+        if array.size(r1) > 0 and s1r1_show
+            array.shift(r1)
+        if array.size(s1) > 0 and s1r1_show
+            array.shift(s1)
+        if array.size(r2) > 0 and s2r2_show
+            array.shift(r2)
+        if array.size(s2) > 0 and s2r2_show
+            array.shift(s2)
+        if array.size(r3) > 0 and s3r3_show
+            array.shift(r3)
+        if array.size(s3) > 0 and s3r3_show
+            array.shift(s3)
+        if array.size(r4) > 0 and s4r4_show
+            array.shift(r4)
+        if array.size(s4) > 0 and s4r4_show
+            array.shift(s4)
+        if array.size(r5) > 0 and s5r5_show
+            array.shift(r5)
+        if array.size(s5) > 0 and s5r5_show
+            array.shift(s5)
+    is_change := true
+else
+    if is_daily_based and custom_years_divisor == -1
+        pivotX_high := math.max(pivotX_high, sec_high)
+        pivotX_low := math.min(pivotX_low, sec_low)
+    else
+        pivotX_high := math.max(pivotX_high, high)
+        pivotX_low := math.min(pivotX_low, low)
+
+if barstate.islast and array.size(arr_time) > 0 and is_change
+    is_change := false
+    if array.size(arr_time) > 2 and custom_years_divisor > 0
+        last_pivot_time = array.get(arr_time, array.size(arr_time) - 1)
+        prev_pivot_time = array.get(arr_time, array.size(arr_time) - 2)
+        estimate_pivot_time = last_pivot_time - prev_pivot_time
+        array.push(arr_time, last_pivot_time + estimate_pivot_time)
+    else
+        array.push(arr_time, time_close(resolution))
+
+    for i = 0 to array.size(lines) - 1
+        if array.size(lines) > 0
+            line.delete(array.shift(lines))
+        if array.size(lines) > 0
+            label.delete(array.shift(labels))
+
+    for i = 0 to array.size(arr_time) - 2
+        if array.size(p) > 0 and p_show
+            draw_line(i, p, p_color)
+            draw_label(i, array.get(p, i), "P", p_color)
+        if array.size(r1) > 0 and s1r1_show
+            draw_line(i, r1, s1r1_color)
+            draw_label(i, array.get(r1, i), "R1", s1r1_color)
+        if array.size(s1) > 0 and s1r1_show
+            draw_line(i, s1, s1r1_color)
+            draw_label(i, array.get(s1, i), "S1", s1r1_color)
+        if array.size(r2) > 0 and s2r2_show
+            draw_line(i, r2, s2r2_color)
+            draw_label(i, array.get(r2, i), "R2", s2r2_color)
+        if array.size(s2) > 0 and s2r2_show
+            draw_line(i, s2, s2r2_color)
+            draw_label(i, array.get(s2, i), "S2", s2r2_color)
+        if array.size(r3) > 0 and s3r3_show
+            draw_line(i, r3, s3r3_color)
+            draw_label(i, array.get(r3, i), "R3", s3r3_color)
+        if array.size(s3) > 0 and s3r3_show
+            draw_line(i, s3, s3r3_color)
+            draw_label(i, array.get(s3, i), "S3", s3r3_color)
+        if array.size(r4) > 0 and s4r4_show
+            draw_line(i, r4, s4r4_color)
+            draw_label(i, array.get(r4, i), "R4", s4r4_color)
+        if array.size(s4) > 0 and s4r4_show
+            draw_line(i, s4, s4r4_color)
+            draw_label(i, array.get(s4, i), "S4", s4r4_color)
+        if array.size(r5) > 0 and s5r5_show
+            draw_line(i, r5, s5r5_color)
+            draw_label(i, array.get(r5, i), "R5", s5r5_color)
+        if array.size(s5) > 0 and s5r5_show
+            draw_line(i, s5, s5r5_color)
+            draw_label(i, array.get(s5, i), "S5", s5r5_color)
+// **********************************************************************
+
+
+daily = input.bool(title="Daily", defval=true)
+dopen = request.security(syminfo.tickerid,'D',open,barmerge.gaps_off,barmerge.lookahead_on)
+dayrange=(high-low)
+dcol = color.red
+SRr1 = request.security(syminfo.tickerid,'D',dayrange)
+SRr2 = request.security(syminfo.tickerid, 'D', dayrange[1])
+SRr3 = request.security(syminfo.tickerid, 'D', dayrange[2])
+SRr4= request.security(syminfo.tickerid, 'D', dayrange[3])
+SRr5= request.security(syminfo.tickerid, 'D', dayrange[4])
+SRr6 = request.security(syminfo.tickerid, 'D', dayrange[5])
+SRr7 = request.security(syminfo.tickerid, 'D', dayrange[6])
+SRr8 = request.security(syminfo.tickerid, 'D', dayrange[7])
+SRr9= request.security(syminfo.tickerid, 'D', dayrange[8])
+SRr10= request.security(syminfo.tickerid, 'D', dayrange[9])
+adr_10 = (SRr1+SRr2+SRr3+SRr4+SRr5+SRr6+SRr7+SRr8+SRr9+SRr10) /10
+adr_9 = (SRr1+SRr2+SRr3+SRr4+SRr5+SRr6+SRr7+SRr8+SRr9) /9
+adr_8 = (SRr1+SRr2+SRr3+SRr4+SRr5+SRr6+SRr7+SRr8) /8
+adr_7 = (SRr1+SRr2+SRr3+SRr4+SRr5+SRr6+SRr7) /7
+adr_6 = (SRr1+SRr2+SRr3+SRr4+SRr5+SRr6) /6
+adr_5 = (SRr1+SRr2+SRr3+SRr4+SRr5) /5
+adr_4 = (SRr1+SRr2+SRr3+SRr4) /4
+adr_3 = (SRr1+SRr2+SRr3) /3
+adr_2= (SRr1+SRr2)/2
+adr_1 = SRr1
+adrhigh10 = dopen+(adr_10/2)
+adrhigh5 = dopen+(adr_5/2)
+adrlow5 = dopen-(adr_5/2)
+adrlow10 = dopen-(adr_10/2)
+dayh5 = plot( daily? adrhigh5 : na, color = dcol)
+dayh10 = plot( daily? adrhigh10 : na, color = dcol)
+dayl5 = plot( daily? adrlow5 : na, color = dcol)
+dayl10 = plot( daily? adrlow10 : na, color = dcol)
+fill(dayh5,dayh10 , color=dcol)
+fill(dayl5,dayl10,color=dcol)
+//Weekly zones
+weekly = input.bool(title = "Weekly", defval=true)
+wopen = request.security(syminfo.tickerid,'W',open,barmerge.gaps_off,barmerge.lookahead_on)
+weekrange=(high-low)
+wcol = color.blue
+wr1 = request.security(syminfo.tickerid,'W',weekrange)
+wr2 = request.security(syminfo.tickerid, 'W', weekrange[1])
+wr3 = request.security(syminfo.tickerid, 'W', weekrange[2])
+wr4= request.security(syminfo.tickerid, 'W', weekrange[3])
+wr5= request.security(syminfo.tickerid, 'W', weekrange[4])
+wr6 = request.security(syminfo.tickerid, 'W', weekrange[5])
+wr7 = request.security(syminfo.tickerid, 'W', weekrange[6])
+wr8 = request.security(syminfo.tickerid, 'W', weekrange[7])
+wr9= request.security(syminfo.tickerid, 'W', weekrange[8])
+wr10= request.security(syminfo.tickerid, 'W', weekrange[9])
+awr_10 = (wr1+wr2+wr3+wr4+wr5+wr6+wr7+wr8+wr9+wr10) /10
+awr_9 = (wr1+wr2+wr3+wr4+wr5+wr6+wr7+wr8+wr9) /9
+awr_8 = (wr1+wr2+wr3+wr4+wr5+wr6+wr7+wr8) /8
+awr_7 = (wr1+wr2+wr3+wr4+wr5+wr6+wr7) /7
+awr_6 = (wr1+wr2+wr3+wr4+wr5+wr6) /6
+awr_5 = (wr1+wr2+wr3+wr4+wr5) /5
+awr_4 = (wr1+wr2+wr3+wr4) /4
+awr_3 = (wr1+wr2+wr3) /3
+awr_2= (wr1+wr2)/2
+awr_1 = wr1
+awrhigh10 = wopen+(awr_10/2)
+awrhigh5 = wopen+(awr_5/2)
+awrlow5 = wopen-(awr_5/2)
+awrlow10 = wopen-(awr_10/2)
+weekh5 = plot( weekly? awrhigh5 : na, color = wcol)
+weekh10 = plot( weekly? awrhigh10 : na, color = wcol)
+weekl5 = plot( weekly? awrlow5 : na, color = wcol)
+weekl10 = plot( weekly? awrlow10 : na, color = wcol)
+fill(weekh5,weekh10,color=wcol)
+fill(weekl5,weekl10,color=wcol)
+//Monthly zones
+monthly = input.bool(title = "Monthly",defval=true)
+mopen = request.security(syminfo.tickerid,'M',open,barmerge.gaps_off,barmerge.lookahead_on)
+monthrange=(high-low)
+mcol = color.green
+mr1 = request.security(syminfo.tickerid,'M',monthrange)
+mr2 = request.security(syminfo.tickerid, 'M', monthrange[1])
+mr3 = request.security(syminfo.tickerid, 'M', monthrange[2])
+mr4= request.security(syminfo.tickerid, 'M', monthrange[3])
+mr5= request.security(syminfo.tickerid, 'M', monthrange[4])
+mr6 = request.security(syminfo.tickerid, 'M', monthrange[5])
+mr7 = request.security(syminfo.tickerid, 'M', monthrange[6])
+mr8 = request.security(syminfo.tickerid, 'M', monthrange[7])
+mr9= request.security(syminfo.tickerid, 'M', monthrange[8])
+mr10= request.security(syminfo.tickerid, 'M', monthrange[9])
+amr_10 = (mr1+mr2+mr3+mr4+mr5+mr6+mr7+mr8+mr9+mr10) /10
+amr_9 = (mr1+mr2+mr3+mr4+mr5+mr6+mr7+mr8+mr9) /9
+amr_8 = (mr1+mr2+mr3+mr4+mr5+mr6+mr7+mr8) /8
+amr_7 = (mr1+mr2+mr3+mr4+mr5+mr6+mr7) /7
+amr_6 = (mr1+mr2+mr3+mr4+mr5+mr6) /6
+amr_5 = (mr1+mr2+mr3+mr4+mr5) /5
+amr_4 = (mr1+mr2+mr3+mr4) /4
+amr_3 = (mr1+mr2+mr3) /3
+amr_2= (mr1+mr2)/2
+amr_1 = mr1
+amrhigh10 = mopen+(amr_10/2)
+amrhigh5 = mopen+(amr_5/2)
+amrlom5 = mopen-(amr_5/2)
+amrlom10 = mopen-(amr_10/2)
+monthh5 = plot( monthly? amrhigh5 : na, color = mcol)
+monthh10 = plot( monthly? amrhigh10 : na, color = mcol)
+monthl5 = plot( monthly? amrlom5 : na, color = mcol)
+monthl10 = plot( monthly? amrlom10 : na, color = mcol)
+fill(monthh5,monthh10,color=mcol)
+fill(monthl5,monthl10,color=mcol)

@@ -1,0 +1,24 @@
+.chips-hawa-tv_link {
+  display: inline-block;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+.chips-hawa-tv_link img {
+  display: inline;
+  width: 20px;
+}
+
+.chips-hawa-backtest{
+  margin: 0 5px 5px 5px !important;
+  padding: 5px 21px !important;
+}
+
+.chips-hawa-linkify{
+  color: #fff;
+  background-color: #3999af;
+  border-color: #33889c;
+  padding: 6px 12px;
+  margin-left: 10px;
+  border-radius: 6px;
+}
