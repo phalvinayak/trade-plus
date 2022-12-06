@@ -12,17 +12,17 @@ let viewMode = "ltp";
 let optionChainPrice = {};
 let ticker = 'TICKER';
 let strikeDiff = 0;
-let priceRange = [0,0];
-let highlightStrike = [0,0];
+let priceRange = [0, 0];
+let highlightStrike = [0, 0];
 let oldOIDiff = 10000000;
 let oldOIDiffRange = 10000000;
 let columnIndex = {};
 let totalColLength = 0;
 let strikePriceOrder = {};
 
-function updateChipsHawa(){
+function updateChipsHawa() {
 	let currentTicker = getTicker();
-	if(!currentTicker || ticker != currentTicker){
+	if (!currentTicker || ticker != currentTicker) {
 		ticker = currentTicker;
 		optionChainPrice = {};
 		strikeDiff = 0;
@@ -31,11 +31,11 @@ function updateChipsHawa(){
 	}
 
 	let futPrice = getFuturePrice();
-	if(!futPrice){return;} // No future price can't do anything
+	if (!futPrice) { return; } // No future price can't do anything
 
-	let {callCol, putCol, strikeCol, callOICol, putOICol} = getColumnPosition();
+	let { callCol, putCol, strikeCol, callOICol, putOICol } = getColumnPosition();
 	updateTableHeader(callCol, putCol, strikeCol);
-	if(strikeDiff === 0){
+	if (strikeDiff === 0) {
 		strikeDiff = getStrikeDiff(strikeCol);
 		let atmStrike = $('#current-atm-row').find(`div.rt-td:nth-child(${strikeCol})`).find('span').text().trim();
 		atmStrike = parseInt(atmStrike);
@@ -71,7 +71,7 @@ function updateChipsHawa(){
 		strikePrice = parseInt(strikePrice);
 		let callStrike = `${strikePrice}-${CALL}`;
 		let putStrike = `${strikePrice}-${PUT}`;
-		if(!optionChainPrice[callStrike]){
+		if (!optionChainPrice[callStrike]) {
 			optionChainPrice[callStrike] = {};
 			optionChainPrice[putStrike] = {};
 			optionChainPrice[callStrike]['chips'] = -1;
@@ -84,12 +84,12 @@ function updateChipsHawa(){
 			optionChainPrice[putStrike]['pcr'] = '0';
 		}
 
-		if($row.find('div.chips-hawa-price').length == 0){
+		if ($row.find('div.chips-hawa-price').length == 0) {
 			// Initial chips and hawa render
 			$callCell.prepend(`<div class='chips-hawa-price chips'>${chips}</div>`);
 			$callCell.append(`<div class='chips-hawa-price hawa'>${hawa}</div>`);
 			$putCell.prepend(`<div class='chips-hawa-price chips'>${chips}</div>`);
-		  	$putCell.append(`<div class='chips-hawa-price hawa'>${hawa}</div>`);
+			$putCell.append(`<div class='chips-hawa-price hawa'>${hawa}</div>`);
 		}
 
 		// Get Call Price of the same option
@@ -109,12 +109,12 @@ function updateChipsHawa(){
 		renderAndUpdateGlobalState(strikePrice, futPrice, peOI, $putCell, PUT);
 		udpateStrikePCR(putStrike, callStrike, $strikeCell);
 
-		if(strikePrice >= priceRange[0] && strikePrice <= priceRange[1]){
+		if (strikePrice >= priceRange[0] && strikePrice <= priceRange[1]) {
 			ceOISumRange += optionChainPrice[callStrike]['oi'];
 			peOISumRange += optionChainPrice[putStrike]['oi'];
 		}
 
-		if(highlightStrike[0] == strikePrice || highlightStrike[1] == strikePrice){
+		if (highlightStrike[0] == strikePrice || highlightStrike[1] == strikePrice) {
 			highlightRow($strikeCell);
 		}
 
@@ -123,9 +123,9 @@ function updateChipsHawa(){
 	});
 
 	// Update Open Interest difference to DOM
-	if(!$('.chips-hawa-cards.cards.oi').hasClass('hide')){
-		let OIDiff = peOISum-ceOISum;
-		if(oldOIDiff != OIDiff){
+	if (!$('.chips-hawa-cards.cards.oi').hasClass('hide')) {
+		let OIDiff = peOISum - ceOISum;
+		if (oldOIDiff != OIDiff) {
 			renderOIChange(ceOISum, peOISum, ceOISumRange, peOISumRange);
 			oldOIDiff = OIDiff;
 		}
@@ -134,21 +134,21 @@ function updateChipsHawa(){
 
 
 // Function to highlight the row
-function highlightRow($cell){
+function highlightRow($cell) {
 	$cell.closest('.rt-tr').find('.rt-td').addClass('chips-hawa-highlight');
 }
 
 // Function to highlight the row
-function highlightCell(rowIndex, colIndex, className = null){
-	if(!className){
+function highlightCell(rowIndex, colIndex, className = null) {
+	if (!className) {
 		className = 'chips-hawa-highlight-cell';
 	}
 	$row = $(`#oc-table-body div.rt-tr-group:nth-child(${rowIndex}) .rt-tr div.rt-td:nth-child(${colIndex})`).addClass(className);
 }
 
 // Setting up the labels
-function updateTableHeader(callCol, putCol, strikeCol){
-	if($('#oc-table-head .chips-hawa-price').length == 0){
+function updateTableHeader(callCol, putCol, strikeCol) {
+	if ($('#oc-table-head .chips-hawa-price').length == 0) {
 		// Call Side Chips Hawa
 		$(`#oc-table-head .rt-tr>div:nth-child(${callCol})`).prepend(`<div class='chips-hawa-price chips'>CHIPS</div>`);
 		$(`#oc-table-head .rt-tr>div:nth-child(${callCol})`).append(`<div class='chips-hawa-price hawa'>HAWA</div>`);
@@ -166,9 +166,9 @@ function updateTableHeader(callCol, putCol, strikeCol){
 // Get the column position based on the columns selected by user
 // Default layout column positions are 
 // Call Price=3, Put Price=6, StrikePrice=4, CallOI=2, PutOI=7
-function getColumnPosition(){
+function getColumnPosition() {
 	columns = $(`#oc-table-head .rt-tr>div`).length
-	if(columnIndex.length && columns == totalColLength){
+	if (columnIndex.length && columns == totalColLength) {
 		return columnIndex;
 	}
 	clearChipsHawaLabels();
@@ -215,59 +215,59 @@ function getColumnPosition(){
 				cols['callOIChange'] = i + 1;
 			}
 		}
-		
+
 	});
 	columnIndex = cols;
 	return cols;
 }
 
 // Function to get current ticket from the URL
-function getTicker(){
+function getTicker() {
 	let urlParams = new URLSearchParams(window.location.search);
-	if(urlParams.has('tradingsymbol')){
+	if (urlParams.has('tradingsymbol')) {
 		return urlParams.get('tradingsymbol');
 	}
 	return null;
 }
 
 // Function to render the Strike PCR
-function udpateStrikePCR(peStrike, ceStrike, $cell){
+function udpateStrikePCR(peStrike, ceStrike, $cell) {
 	// Updating Percentage Hawa
 	let pHawa = optionChainPrice[ceStrike]['percentageHawa'];
-	if(pHawa == 0){
+	if (pHawa == 0) {
 		pHawa = optionChainPrice[peStrike]['percentageHawa'];
 	}
-	if($cell.find('.chips-hawa-pcr-ratio.p-hawa').length){
+	if ($cell.find('.chips-hawa-pcr-ratio.p-hawa').length) {
 		$cell.find('.chips-hawa-pcr-ratio.p-hawa').text(`${parseFloat(pHawa).toFixed(2)}%`);
 	} else {
 		$cell.prepend(`<div class='chips-hawa-pcr-ratio p-hawa'>${parseFloat(pHawa).toFixed(2)}%</div>`);
 	}
 
 	let pcr = '-n/a-';
-	if(optionChainPrice[peStrike]['oi'] != 0 && optionChainPrice[ceStrike]['oi'] != 0){
-		pcr = parseFloat(optionChainPrice[peStrike]['oi']/optionChainPrice[ceStrike]['oi']).toFixed(2);
+	if (optionChainPrice[peStrike]['oi'] != 0 && optionChainPrice[ceStrike]['oi'] != 0) {
+		pcr = parseFloat(optionChainPrice[peStrike]['oi'] / optionChainPrice[ceStrike]['oi']).toFixed(2);
 	}
-	
-	if(pcr === optionChainPrice[peStrike]['pcr']){
+
+	if (pcr === optionChainPrice[peStrike]['pcr']) {
 		return;
 	}
 	optionChainPrice[peStrike]['pcr'] = pcr;
 	optionChainPrice[ceStrike]['pcr'] = pcr;
-	if($cell.find('.chips-hawa-pcr-ratio.pcr').length){
+	if ($cell.find('.chips-hawa-pcr-ratio.pcr').length) {
 		$cell.find('.chips-hawa-pcr-ratio.pcr').text(pcr);
 	} else {
 		$cell.append(`<div class='chips-hawa-pcr-ratio pcr'>${pcr}</div>`);
 	}
-	
+
 }
 
 // Function to render Open Interest on the page
-function renderOIChange(ceOISum, peOISum, ceOISumRange, peOISumRange){
+function renderOIChange(ceOISum, peOISum, ceOISumRange, peOISumRange) {
 	$OICard = $('.chips-hawa-cards.cards.oi');
-	let OIDiff = peOISumRange-ceOISumRange;
+	let OIDiff = peOISumRange - ceOISumRange;
 	$OICard.find('.diff_item').text(`${parseFloat(peOISumRange).toFixed(2)} - ${parseFloat(ceOISumRange).toFixed(2)}
-	= ${parseFloat(OIDiff).toFixed(2)}L (PCR: ${parseFloat(peOISumRange/ceOISumRange).toFixed(2)})`);
-	if(OIDiff<0){
+	= ${parseFloat(OIDiff).toFixed(2)}L (PCR: ${parseFloat(peOISumRange / ceOISumRange).toFixed(2)})`);
+	if (OIDiff < 0) {
 		$OICard.find('.card').removeClass('card-4').addClass('card-5');
 		$OICard.find('.card .sentiments').text('Bearish Sentiments');
 	} else {
@@ -275,41 +275,41 @@ function renderOIChange(ceOISum, peOISum, ceOISumRange, peOISumRange){
 		$OICard.find('.card .sentiments').text('Bullish Sentiments');
 	}
 	$OICard.find('.all-oi').text(`Over all OI diff: ${parseFloat(peOISum).toFixed(2)} - ${parseFloat(ceOISum).toFixed(2)} 
-	= ${parseFloat(peOISum-ceOISum).toFixed(2)}L (PCR: ${parseFloat(peOISum/ceOISum).toFixed(2)})`);
+	= ${parseFloat(peOISum - ceOISum).toFixed(2)}L (PCR: ${parseFloat(peOISum / ceOISum).toFixed(2)})`);
 }
 
 // Function to upate chips hawa state and UI
-function renderAndUpdateGlobalState(strikePrice, futPrice, oi, $cell, opType){
+function renderAndUpdateGlobalState(strikePrice, futPrice, oi, $cell, opType) {
 	let price = $cell.find('.MuiBox-root').text().split(' ')[0].replace(/\,/g, '');
 	price = parseFloat(price).toFixed(2);
 	[chips, hawa] = getChipsHawa(futPrice, strikePrice, price, opType);
 	let strike = `${strikePrice}-${opType}`
 	oi = oi.split('\n')[0];
-	if(!isNumeric(oi)){oi = 0}
+	if (!isNumeric(oi)) { oi = 0 }
 	optionChainPrice[strike]['oi'] = parseFloat(oi);
-	if(optionChainPrice[strike].chips !== chips || optionChainPrice[strike].hawa !== hawa){
+	if (optionChainPrice[strike].chips !== chips || optionChainPrice[strike].hawa !== hawa) {
 		$cell.find('div.chips-hawa-price.chips').text(chips);
 		$cell.find('div.chips-hawa-price.hawa').text(hawa);
 	}
 	optionChainPrice[strike]['chips'] = chips;
 	optionChainPrice[strike]['hawa'] = hawa;
-	if(chips != 0){
-		optionChainPrice[strike]['percentageHawa'] = (hawa/price)*100;
+	if (chips != 0) {
+		optionChainPrice[strike]['percentageHawa'] = (hawa / price) * 100;
 	} else {
 		optionChainPrice[strike]['percentageHawa'] = 0;
 	}
 }
 
 // Function to remove the chips hawa from the page.
-function clearChipsHawaLabels(){
+function clearChipsHawaLabels() {
 	$('#oc-table-body div.chips-hawa-price').remove();
 	$('#oc-table-body div.chips-hawa-pcr-ratio').remove();
 	optionChainPrice = {};
 }
 
 // Getting future price
-function getFuturePrice(){
-	if($('[class^=style__TickerButtonText]').length){
+function getFuturePrice() {
+	if ($('[class^=style__TickerButtonText]').length) {
 		let futPrice = $('[class^=style__TickerButtonText]').contents().filter(function () { return this.nodeType === 3; })[2].textContent;
 		return parseFloat(futPrice);
 	}
@@ -318,22 +318,22 @@ function getFuturePrice(){
 
 // Function to calculate Chips and Hawa
 // Returns [Chips, HAWA] in array format
-function getChipsHawa(futPrice, strikePrice, optionPrice, optionType){
+function getChipsHawa(futPrice, strikePrice, optionPrice, optionType) {
 	let hawa = 0;
 	let chips = 0;
-	if(optionPrice == 0 || optionPrice === 'NaN'){
+	if (optionPrice == 0 || optionPrice === 'NaN') {
 		return [chips, hawa];
 	}
 
-	if(optionType === CALL){
-		if(strikePrice < futPrice){
+	if (optionType === CALL) {
+		if (strikePrice < futPrice) {
 			chips = futPrice - strikePrice;
 			hawa = optionPrice - chips;
 		} else {
 			hawa = optionPrice;
 		}
-	} else if(optionType === PUT) {
-		if(strikePrice > futPrice){
+	} else if (optionType === PUT) {
+		if (strikePrice > futPrice) {
 			chips = strikePrice - futPrice;
 			hawa = optionPrice - chips;
 		} else {
@@ -346,7 +346,7 @@ function getChipsHawa(futPrice, strikePrice, optionPrice, optionType){
 }
 
 // Getting Strike Price difference
-function getStrikeDiff(strikeCol){
+function getStrikeDiff(strikeCol) {
 	let $strikeCell1 = $(`#oc-table-body div.rt-tr-group:nth-child(1) .rt-tr div.rt-td:nth-child(${strikeCol})`);
 	let strikePrice1 = $strikeCell1.find('span').text().trim();
 
@@ -357,7 +357,7 @@ function getStrikeDiff(strikeCol){
 }
 
 // Function to set OI markup in the dom
-function initMenuBar(){
+function initMenuBar() {
 	$('body').append(`
 		<div class="chips-hawa-cards cards hide oi">
 			<div class="card">
@@ -440,12 +440,12 @@ function initMenuBar(){
 
 	$('input[name=view]').on('change', e => {
 		let newView = $('input[name=view]:checked').val();
-		if(viewMode != newView){
+		if (viewMode != newView) {
 			resetView(viewMode);
 		}
 		viewMode = newView;
 	});
-	
+
 	$('.chips-hawa-overlay').on('click', e => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -459,7 +459,7 @@ function initMenuBar(){
 }
 
 // To register LTP calculator events
-function registerLtpEvents(){
+function registerLtpEvents() {
 	// console.log('Registering Event');
 	$('#oc-table-body').on('click', 'button.chips-hawa-ltp-trigger', e => {
 		e.preventDefault();
@@ -469,25 +469,25 @@ function registerLtpEvents(){
 	});
 }
 
-function ltpCalculator(type, callPrice, callDelta, putPrice, putDelta, strike, sl){
+function ltpCalculator(type, callPrice, callDelta, putPrice, putDelta, strike, sl) {
 	let output = 0;
 	let spotPrice = getFuturePrice();
-	if(type == 'error'){
+	if (type == 'error') {
 		output = "No Pair Data";
-	} else if(type=='Bullish') {
+	} else if (type == 'Bullish') {
 		$('.chips-hawa-ltp-output').addClass('bearish');
-		if(parseFloat(putPrice) < parseFloat(callPrice)){
+		if (parseFloat(putPrice) < parseFloat(callPrice)) {
 			output = "Breakout";
 		} else {
-			output = spotPrice + ((parseFloat(putPrice) - parseFloat(callPrice))/(callDelta + putDelta)) + 0.05;
+			output = spotPrice + ((parseFloat(putPrice) - parseFloat(callPrice)) / (callDelta + putDelta)) + 0.05;
 			output = isNumeric(parseFloat(output).toFixed(2)) ? parseFloat(output).toFixed(2) : 'Data Error';
 		}
 	} else {
 		$('.chips-hawa-ltp-output').removeClass('bearish');
-		if(parseFloat(callPrice) < parseFloat(putPrice)){
+		if (parseFloat(callPrice) < parseFloat(putPrice)) {
 			output = "Breakdown";
 		} else {
-			output = spotPrice - ((parseFloat(callPrice) - parseFloat(putPrice))/(callDelta + putDelta)) - 0.05;
+			output = spotPrice - ((parseFloat(callPrice) - parseFloat(putPrice)) / (callDelta + putDelta)) - 0.05;
 			output = isNumeric(parseFloat(output).toFixed(2)) ? parseFloat(output).toFixed(2) : 'Data Error';
 		}
 	}
@@ -504,7 +504,7 @@ function ltpCalculator(type, callPrice, callDelta, putPrice, putDelta, strike, s
 	// console.log(output);
 }
 
-function ltpCalculatorUI(e){
+function ltpCalculatorUI(e) {
 	e.preventDefault();
 	e.stopPropagation();
 	let $e = $(e.target);
@@ -516,16 +516,16 @@ function ltpCalculatorUI(e){
 	let selectedOptionData = optionChainPrice[currentStrikeKey];
 	let callStrikeKey = `${selectedOptionData.strike}-CALL`;
 	let putStrikeKey = `${strikePriceOrder[selectedOptionData.index - 1]}-PUT`;
-	let sl = parseInt(optionChainPrice[putStrikeKey].strike,10) - 1;
+	let sl = parseInt(optionChainPrice[putStrikeKey].strike, 10) - 1;
 	let type = 'Bearish';
-	if(optionType == 'CALL'){
+	if (optionType == 'CALL') {
 		putStrikeKey = `${selectedOptionData.strike}-PUT`;
 		callStrikeKey = `${strikePriceOrder[selectedOptionData.index + 1]}-CALL`;
 		sl = parseInt(optionChainPrice[callStrikeKey].strike, 10) + 1;
 		type = 'Bullish';
 	}
-	
-	if(optionChainPrice[putStrikeKey] && optionChainPrice[callStrikeKey]){ // Pairing put strike present
+
+	if (optionChainPrice[putStrikeKey] && optionChainPrice[callStrikeKey]) { // Pairing put strike present
 		callOptionData = optionChainPrice[callStrikeKey];
 		putOptionData = optionChainPrice[putStrikeKey];
 		ltpCalculator(type, callOptionData.price, callOptionData.delta, putOptionData.price, putOptionData.delta, selectedOptionData.strike, sl);
@@ -538,9 +538,9 @@ function showLTPOverlay() {
 	$('.chips-hawa-overlay').removeClass('hide');
 }
 
-function resetView(view){
+function resetView(view) {
 	$container = $('#tableContainer');
-	if(view == 'chips'){
+	if (view == 'chips') {
 		$('body').removeClass('chips-hawa-nk');
 		$('body').addClass('chips-hawa-ltp');
 		$container.find('div.chips-hawa-price').remove();
@@ -548,7 +548,7 @@ function resetView(view){
 		$container.find('.rt-td.chips-hawa-highlight').removeClass('chips-hawa-highlight');
 		optionChainPrice = {};
 		registerLtpEvents();
-	} else if(view == 'ltp'){
+	} else if (view == 'ltp') {
 		$('body').removeClass('chips-hawa-ltp');
 		$('body').addClass('chips-hawa-nk');
 		$container.find('.chips-hawa-highlight-cell').removeClass('chips-hawa-highlight-cell');
@@ -563,15 +563,15 @@ function resetView(view){
 }
 
 function isNumeric(str) {
-  if (typeof str != 'string') return false // we only process strings!  
-  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+	if (typeof str != 'string') return false // we only process strings!  
+	return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+		!isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
 /******************LTP CALCULATOR BEGIN*************************/
-function updateLTP(){
+function updateLTP() {
 	let currentTicker = getTicker();
-	if(!currentTicker || ticker != currentTicker){
+	if (!currentTicker || ticker != currentTicker) {
 		ticker = currentTicker;
 		optionChainPrice = {};
 		strikeDiff = 0;
@@ -581,11 +581,11 @@ function updateLTP(){
 	}
 
 	let futPrice = getFuturePrice();
-	if(!futPrice){return;} // No future price can't do anything
+	if (!futPrice) { return; } // No future price can't do anything
 
 	let colPos = getColumnPosition();
-	if(!colPos.callVolume || !colPos.putVolume || !colPos.callDelta || !colPos.putDelta || !colPos.callOIChange || !colPos.putOIChange){
-		if($('.chips-hawa-error').length == 0){
+	if (!colPos.callVolume || !colPos.putVolume || !colPos.callDelta || !colPos.putDelta || !colPos.callOIChange || !colPos.putOIChange) {
+		if ($('.chips-hawa-error').length == 0) {
 			$('body').append(`
 				<div class="chips-hawa-error">
 					<p>Please enable Volume,OI-Change and Delta column from the settings</p>
@@ -595,11 +595,11 @@ function updateLTP(){
 	} else {
 		$('.chips-hawa-error').remove();
 	}
-	
-	if(strikeDiff === 0){
+
+	if (strikeDiff === 0) {
 		strikeDiff = getStrikeDiff(colPos.strikeCol);
 	}
-	let strikePair = [0,0];
+	let strikePair = [0, 0];
 
 	$('#oc-table-body div.rt-tr-group').each((i, row) => {
 		let $row = $(row);
@@ -618,10 +618,10 @@ function updateLTP(){
 		// Get Strike price from DOM
 		let strikePrice = $strikeCell.find('span').text().trim();
 		strikePrice = parseFloat(strikePrice).toFixed(2);
-		strikePriceOrder[i+1] = strikePrice;
+		strikePriceOrder[i + 1] = strikePrice;
 		let callStrike = `${strikePrice}-${CALL}`;
 		let putStrike = `${strikePrice}-${PUT}`;
-		if(!optionChainPrice[callStrike]){
+		if (!optionChainPrice[callStrike]) {
 			optionChainPrice[callStrike] = {};
 			optionChainPrice[putStrike] = {};
 			optionChainPrice[callStrike]['index'] = i + 1;
@@ -667,34 +667,34 @@ function updateLTP(){
 		let callOIChange = optionChainPrice[callStrike]['oiChange'];
 		let putOIChange = optionChainPrice[putStrike]['oiChange'];
 		let OIChangeRatio = '';
-		if(callOIChange > 0 && putOIChange > 0){
-			if(callOIChange > putOIChange){
-				OIChangeRatio = `${parseFloat(callOIChange/putOIChange).toFixed(2)}:1`;
+		if (callOIChange > 0 && putOIChange > 0) {
+			if (callOIChange > putOIChange) {
+				OIChangeRatio = `${parseFloat(callOIChange / putOIChange).toFixed(2)}:1`;
 			} else {
-				OIChangeRatio = `1:${parseFloat(putOIChange/callOIChange).toFixed(2)}`;
+				OIChangeRatio = `1:${parseFloat(putOIChange / callOIChange).toFixed(2)}`;
 			}
-		} else if(callOIChange < 0 && putOIChange < 0){
-			if(callOIChange > putOIChange){
-				OIChangeRatio = OIChangeRatio = `1:${parseFloat((putOIChange*-1)/(callOIChange*-1)).toFixed(2)}`;
+		} else if (callOIChange < 0 && putOIChange < 0) {
+			if (callOIChange > putOIChange) {
+				OIChangeRatio = OIChangeRatio = `1:${parseFloat((putOIChange * -1) / (callOIChange * -1)).toFixed(2)}`;
 			} else {
-				OIChangeRatio = `${parseFloat((callOIChange*-1)/(putOIChange*-1)).toFixed(2)}:1`;
+				OIChangeRatio = `${parseFloat((callOIChange * -1) / (putOIChange * -1)).toFixed(2)}:1`;
 			}
 		} else {
 			OIChangeRatio = `∞`;
 		}
 
-		if($strikeCell.find('.chips-hawa-oi-ratio').length){
+		if ($strikeCell.find('.chips-hawa-oi-ratio').length) {
 			$strikeCell.find('.chips-hawa-oi-ratio').text(OIChangeRatio);
 		} else {
 			$strikeCell.append(`<div class='chips-hawa-oi-ratio'>${OIChangeRatio}</div>`);
 		}
 
-		if(parseFloat(strikePrice) < parseFloat(futPrice)){
-			strikePair[0] = i+1;
-			strikePair[1] = i+2;
+		if (parseFloat(strikePrice) < parseFloat(futPrice)) {
+			strikePair[0] = i + 1;
+			strikePair[1] = i + 2;
 		}
 
-		if(SHOW_LTP && $callCell.find('button').length == 0){
+		if (SHOW_LTP && $callCell.find('button').length == 0) {
 			let $btn = $("<button>", {
 				"class": "chips-hawa-ltp-trigger",
 				text: "LTP",
@@ -704,7 +704,7 @@ function updateLTP(){
 			$callCell.append($btn);
 		}
 
-		if(SHOW_LTP && $putCell.find('button').length == 0){
+		if (SHOW_LTP && $putCell.find('button').length == 0) {
 			let $btn = $("<button>", {
 				"class": "chips-hawa-ltp-trigger",
 				text: "LTP",
@@ -727,7 +727,7 @@ function updateLTP(){
 	let iLineindex2 = optionChainPrice[`${strikePair[1]}-CALL`].index;
 	$(`#oc-table-body div.rt-tr-group:nth-child(${iLineindex2})`).addClass('chips-hawa-imaginary-line');
 
-	
+
 	// Find the max OI/Volume/IOChangePer for CALL side
 	let callStrikePrice = strikePair[0];
 	let callStrikeKey = `${callStrikePrice}-CALL`;
@@ -736,18 +736,18 @@ function updateLTP(){
 	let maxCallOIChangeStrike = callStrikeKey;
 
 	do {
-		if(optionChainPrice[maxCallVolumeStrike].volume < optionChainPrice[callStrikeKey].volume){
+		if (optionChainPrice[maxCallVolumeStrike].volume < optionChainPrice[callStrikeKey].volume) {
 			maxCallVolumeStrike = callStrikeKey;
 		}
-		if(optionChainPrice[maxCallOIStrike].oi < optionChainPrice[callStrikeKey].oi){
+		if (optionChainPrice[maxCallOIStrike].oi < optionChainPrice[callStrikeKey].oi) {
 			maxCallOIStrike = callStrikeKey;
 		}
-		if(optionChainPrice[maxCallOIChangeStrike].oiChange < optionChainPrice[callStrikeKey].oiChange){
+		if (optionChainPrice[maxCallOIChangeStrike].oiChange < optionChainPrice[callStrikeKey].oiChange) {
 			maxCallOIChangeStrike = callStrikeKey;
 		}
 		callStrikePrice = strikePriceOrder[optionChainPrice[callStrikeKey].index + 1];
 		callStrikeKey = `${callStrikePrice}-CALL`;
-	} while(optionChainPrice[callStrikeKey]);
+	} while (optionChainPrice[callStrikeKey]);
 	highlightCell(optionChainPrice[maxCallVolumeStrike].index, colPos.callVolume);
 	highlightCell(optionChainPrice[maxCallOIStrike].index, colPos.callOICol);
 	highlightCell(optionChainPrice[maxCallOIChangeStrike].index, colPos.callOIChange, 'chips-hawa-highlight-int-cell');
@@ -759,39 +759,43 @@ function updateLTP(){
 	let maxPutOIStrike = putStrikeKey;
 	let maxPutOIChangeStrike = putStrikeKey;
 	do {
-		if(optionChainPrice[maxPutVolumeStrike].volume < optionChainPrice[putStrikeKey].volume){
+		if (optionChainPrice[maxPutVolumeStrike].volume < optionChainPrice[putStrikeKey].volume) {
 			maxPutVolumeStrike = putStrikeKey;
 		}
-		if(optionChainPrice[maxPutOIStrike].oi < optionChainPrice[putStrikeKey].oi){
+		if (optionChainPrice[maxPutOIStrike].oi < optionChainPrice[putStrikeKey].oi) {
 			maxPutOIStrike = putStrikeKey;
 		}
-		if(optionChainPrice[maxPutOIChangeStrike].oiChange < optionChainPrice[putStrikeKey].oiChange){
+		if (optionChainPrice[maxPutOIChangeStrike].oiChange < optionChainPrice[putStrikeKey].oiChange) {
 			maxPutOIChangeStrike = putStrikeKey;
 		}
 		putStrikePrice = strikePriceOrder[optionChainPrice[putStrikeKey].index - 1];
 		putStrikeKey = `${putStrikePrice}-PUT`;
-	} while(optionChainPrice[putStrikeKey]);
+	} while (optionChainPrice[putStrikeKey]);
 	highlightCell(optionChainPrice[maxPutVolumeStrike].index, colPos.putVolume);
 	highlightCell(optionChainPrice[maxPutOIStrike].index, colPos.putOICol);
 	highlightCell(optionChainPrice[maxPutOIChangeStrike].index, colPos.putOIChange, 'chips-hawa-highlight-int-cell');
 }
 /******************LTP CALCULATOR ENDS*************************/
 
-function getElementPosition($element){
-	let leftPos  = $element[0].getBoundingClientRect().left   + $(window)['scrollLeft']();
-	let rightPos = $element[0].getBoundingClientRect().right  + $(window)['scrollLeft']();
-	let topPos   = $element[0].getBoundingClientRect().top    + $(window)['scrollTop']();
-	let bottomPos= $element[0].getBoundingClientRect().bottom + $(window)['scrollTop']();
+function getElementPosition($element) {
+	let leftPos = $element[0].getBoundingClientRect().left + $(window)['scrollLeft']();
+	let rightPos = $element[0].getBoundingClientRect().right + $(window)['scrollLeft']();
+	let topPos = $element[0].getBoundingClientRect().top + $(window)['scrollTop']();
+	let bottomPos = $element[0].getBoundingClientRect().bottom + $(window)['scrollTop']();
 	return [leftPos, topPos, rightPos, bottomPos];
 }
 
-function main(){
+function main() {
 	initMenuBar();
 	setInterval(() => {
-		if(viewMode === "chips"){
-			updateChipsHawa();
-		} else if(viewMode === "ltp"){
-			updateLTP();
+		try {
+			if (viewMode === "chips") {
+				updateChipsHawa();
+			} else if (viewMode === "ltp") {
+				updateLTP();
+			}
+		} catch (e) {
+			console.error(e) // Move on
 		}
 	}, 1200);
 }

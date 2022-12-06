@@ -5,7 +5,7 @@ const SHOW_CHIPS_HAWA = false;
 const SHOW_LTP = true;
 
 // Gloabal variables available across the script
-let optionChainPrice = {aggr:{CALLHawa: 0, PUTHawa: 0}};
+let optionChainPrice = { aggr: { CALLHawa: 0, PUTHawa: 0 } };
 let ticker = 'TICKER';
 let strikeDiff = 0;
 let priceRange = [0, 0];
@@ -25,8 +25,8 @@ function getColumnPosition() {
 	totalColLength = columns;
 	let cols = {};
 
-	$('#sort_table_wrapper thead tr:nth-child(2) th').each((i,col) => {
-        let title = $(col).text().replace(/\s/g, '').toLowerCase();
+	$('#sort_table_wrapper thead tr:nth-child(2) th').each((i, col) => {
+		let title = $(col).text().replace(/\s/g, '').toLowerCase();
 		if (title.includes('ltp')) {
 			if (cols['callCol']) {
 				cols['putCol'] = i + 1;
@@ -58,7 +58,7 @@ function getColumnPosition() {
 				cols['callVolume'] = i + 1;
 			}
 		}
-		if (title == 'oi'){
+		if (title == 'oi') {
 			if (cols['callOI']) {
 				cols['putOI'] = i + 1;
 			} else {
@@ -73,7 +73,7 @@ function getColumnPosition() {
 // Function to render the Strike PCR
 function udpateStrikePCR(peStrike, ceStrike, $cell) {
 	// Updating Percentage Hawa
-	if(SHOW_CHIPS_HAWA){
+	if (SHOW_CHIPS_HAWA) {
 		let pHawa = optionChainPrice[ceStrike]['percentageHawa'];
 		if (pHawa == 0) {
 			pHawa = optionChainPrice[peStrike]['percentageHawa'];
@@ -86,7 +86,7 @@ function udpateStrikePCR(peStrike, ceStrike, $cell) {
 	}
 
 	oiRatio = optionChainPrice[ceStrike]['oiChangeRatio'];
-	if($cell.find('.chips-hawa-pcr-ratio.pcr').length){
+	if ($cell.find('.chips-hawa-pcr-ratio.pcr').length) {
 		$cell.find('.chips-hawa-pcr-ratio.pcr').text(oiRatio);
 	} else {
 		$cell.append(`<div class='chips-hawa-pcr-ratio pcr'>${oiRatio}</div>`);
@@ -120,7 +120,7 @@ function updateChipsHawa() {
 	let currentTicker = getTicker();
 	if (!currentTicker || ticker != currentTicker) {
 		ticker = currentTicker;
-		optionChainPrice = {aggr:{CALLHawa: 0, PUTHawa: 0}};;
+		optionChainPrice = { aggr: { CALLHawa: 0, PUTHawa: 0 } };;
 		strikeDiff = 0;
 		oldOIDiff = 0;
 		// return;
@@ -129,7 +129,7 @@ function updateChipsHawa() {
 	let futPrice = getFuturePrice();
 	if (!futPrice) { return; } // No future price can't do anything
 	let colPosition = getColumnPosition();
-	let strikePair = [0,0];
+	let strikePair = [0, 0];
 	updateTableHeader(colPosition.callCol, colPosition.putCol, colPosition.strikeCol);
 	$('#sort_table_wrapper tbody tr').each((i, row) => {
 		let $row = $(row);
@@ -150,10 +150,10 @@ function updateChipsHawa() {
 		let callStrike = `${strikePrice}-${CALL}`;
 		let putStrike = `${strikePrice}-${PUT}`;
 
-		strikePriceOrder[i+1] = strikePrice;
-		if(parseFloat(strikePrice) < parseFloat(futPrice)){
-			strikePair[0] = i+1;
-			strikePair[1] = i+2;
+		strikePriceOrder[i + 1] = strikePrice;
+		if (parseFloat(strikePrice) < parseFloat(futPrice)) {
+			strikePair[0] = i + 1;
+			strikePair[1] = i + 2;
 		}
 
 		if (!optionChainPrice[callStrike]) {
@@ -169,7 +169,7 @@ function updateChipsHawa() {
 			optionChainPrice[putStrike]['hawa'] = -1;
 		}
 
-		if(SHOW_CHIPS_HAWA && $row.find('span.chips-hawa-price').length == 0) {
+		if (SHOW_CHIPS_HAWA && $row.find('span.chips-hawa-price').length == 0) {
 			// Initial chips and hawa render
 			$callCell.prepend(`<span class='chips-hawa-price chips'>${optionChainPrice[callStrike].chips}</span>`);
 			$callCell.append(`<span class='chips-hawa-price hawa'>${optionChainPrice[callStrike].hawa}</span>`);
@@ -184,7 +184,7 @@ function updateChipsHawa() {
 		readColumnValues(callStrike, putStrike, $callDeltaCell, $putDeltaCell, $callVolumeCell, $putVolumeCell);
 		udpateStrikePCR(putStrike, callStrike, $strikeCell);
 
-		if(SHOW_LTP){
+		if (SHOW_LTP) {
 			$callVolumeCell.off('click').on('click', this, e => {
 				e.preventDefault();
 				bindVolumeEvent(CALL, strikePrice);
@@ -213,7 +213,7 @@ function updateChipsHawa() {
 	// console.log(optionChainPrice.aggr);
 	// renderHawaComparision(optionChainPrice.aggr);
 
-	if(strikePair[1] != 0){
+	if (strikePair[1] != 0) {
 		// Reset the imaginary line and highlighted cells
 		$('.chips-hawa-imaginary-line').removeClass('chips-hawa-imaginary-line');
 		// Highlight Imaginary line
@@ -221,7 +221,7 @@ function updateChipsHawa() {
 	}
 }
 
-function openPage(url){
+function openPage(url) {
 	let win = window.open(url, '_blank');
 	if (win) {
 		win.focus();
@@ -231,7 +231,7 @@ function openPage(url){
 }
 
 // Function to bind event on volume
-function bindVolumeEvent(optionType, strikePrice){
+function bindVolumeEvent(optionType, strikePrice) {
 	// console.log('Listining to the event', strikePrice);
 	let currentStrikeKey = `${strikePrice}-${optionType}`;
 	let selectedOptionData = optionChainPrice[currentStrikeKey];
@@ -240,13 +240,13 @@ function bindVolumeEvent(optionType, strikePrice){
 	// console.log(callStrikeKey, putStrikeKey);
 	let sl = parseFloat(optionChainPrice[putStrikeKey].strike) - 1;
 	let type = 'Bearish';
-	if(optionType == CALL){
+	if (optionType == CALL) {
 		type = 'Bullish';
 		putStrikeKey = `${selectedOptionData.strike}-PUT`;
 		callStrikeKey = `${strikePriceOrder[selectedOptionData.index + 1]}-CALL`;
 		sl = parseFloat(optionChainPrice[callStrikeKey].strike) + 1;
 	}
-	if(optionChainPrice[putStrikeKey] && optionChainPrice[callStrikeKey]){
+	if (optionChainPrice[putStrikeKey] && optionChainPrice[callStrikeKey]) {
 		let callOptionData = optionChainPrice[callStrikeKey];
 		let putOptionData = optionChainPrice[putStrikeKey];
 		ltpCalculator(type, callOptionData.price, parseFloat(callOptionData.delta), putOptionData.price,
@@ -256,26 +256,26 @@ function bindVolumeEvent(optionType, strikePrice){
 	}
 }
 
-function ltpCalculator(type, callPrice, callDelta, putPrice, putDelta, strike, sl){
+function ltpCalculator(type, callPrice, callDelta, putPrice, putDelta, strike, sl) {
 	// console.log(type, callPrice, callDelta, putPrice, putDelta, strike, sl);
 	let output = 0;
 	let spotPrice = getFuturePrice();
-	if(type == 'error'){
+	if (type == 'error') {
 		output = "No Pair Data";
-	} else if(type=='Bullish') {
+	} else if (type == 'Bullish') {
 		$('.chips-hawa-ltp-output').addClass('bearish');
-		if(parseFloat(putPrice) < parseFloat(callPrice)){
+		if (parseFloat(putPrice) < parseFloat(callPrice)) {
 			output = "Breakout";
 		} else {
-			output = spotPrice + ((parseFloat(putPrice) - parseFloat(callPrice))/(callDelta + putDelta)) + 0.05;
+			output = spotPrice + ((parseFloat(putPrice) - parseFloat(callPrice)) / (callDelta + putDelta)) + 0.05;
 			output = isNumeric(parseFloat(output).toFixed(2)) ? parseFloat(output).toFixed(2) : 'Data Error';
 		}
 	} else {
 		$('.chips-hawa-ltp-output').removeClass('bearish');
-		if(parseFloat(callPrice) < parseFloat(putPrice)){
+		if (parseFloat(callPrice) < parseFloat(putPrice)) {
 			output = "Breakdown";
 		} else {
-			output = spotPrice - ((parseFloat(callPrice) - parseFloat(putPrice))/(callDelta + putDelta)) - 0.05;
+			output = spotPrice - ((parseFloat(callPrice) - parseFloat(putPrice)) / (callDelta + putDelta)) - 0.05;
 			output = isNumeric(parseFloat(output).toFixed(2)) ? parseFloat(output).toFixed(2) : 'Data Error';
 		}
 	}
@@ -293,7 +293,7 @@ function ltpCalculator(type, callPrice, callDelta, putPrice, putDelta, strike, s
 }
 
 // Function to read the data
-function readColumnValues(callStrike, putStrike, $callDeltaCell, $putDeltaCell, $callVolumeCell, $putVolumeCell){
+function readColumnValues(callStrike, putStrike, $callDeltaCell, $putDeltaCell, $callVolumeCell, $putVolumeCell) {
 	let callVolume = $callVolumeCell.text().trim().replace(/\,/g, '');
 	let putVolume = $putVolumeCell.text().trim().replace(/\,/g, '');
 	let callDelta = $callDeltaCell.text().trim().replace(/\,/g, '');
@@ -325,11 +325,11 @@ function renderAndUpdateGlobalState(strikePrice, futPrice, $cell, opType) {
 	} else {
 		optionChainPrice[strike]['percentageHawa'] = 0;
 	}
-	
+
 	optionChainPrice.aggr[`${opType}Hawa`] += parseFloat(hawa)
 }
 
-function renderHawaComparision(aggr){
+function renderHawaComparision(aggr) {
 	$('#sort_table_wrapper tfoot tr:nth-child(1) th:nth-child(6)').text('CE-Hawa');
 	$('#sort_table_wrapper tfoot tr:nth-child(1) th:nth-child(8)').text('PE-Hawa');
 	$('#sort_table_wrapper tfoot tr:nth-child(2) th:nth-child(6)').text(parseFloat(aggr.CALLHawa).toFixed(0));
@@ -384,13 +384,13 @@ function getChipsHawa(futPrice, strikePrice, optionPrice, optionType) {
 function clearChipsHawaLabels() {
 	$('#oc-table-body span.chips-hawa-price').remove();
 	$('#oc-table-body span.chips-hawa-pcr-ratio').remove();
-	optionChainPrice = {aggr:{CALLHawa: 0, PUTHawa: 0}};
+	optionChainPrice = { aggr: { CALLHawa: 0, PUTHawa: 0 } };
 }
 
 function isNumeric(str) {
 	if (typeof str != 'string') return false // we only process strings!  
 	return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-		   !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+		!isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
 // Highlight Open OI columns
@@ -403,17 +403,17 @@ function highlightChangeOI(callStrike, putStrike, $callOIChgCell, $putOIChgCell)
 	optionChainPrice[putStrike]['oiChange'] = putOIChange;
 	let OIChangeRatio = '';
 
-	if(callOIChange > 0 && putOIChange > 0){
-		if(callOIChange > putOIChange){
+	if (callOIChange > 0 && putOIChange > 0) {
+		if (callOIChange > putOIChange) {
 			OIChangeRatio = `${getRatio(callOIChange, putOIChange)} :: 1`;
 		} else {
 			OIChangeRatio = `1 :: ${getRatio(putOIChange, callOIChange)}`;
 		}
-	} else if(callOIChange < 0 && putOIChange < 0){
-		if(callOIChange > putOIChange){
-			OIChangeRatio = OIChangeRatio = `1 :: ${getRatio(putOIChange*-1, callOIChange*-1)}`;
+	} else if (callOIChange < 0 && putOIChange < 0) {
+		if (callOIChange > putOIChange) {
+			OIChangeRatio = OIChangeRatio = `1 :: ${getRatio(putOIChange * -1, callOIChange * -1)}`;
 		} else {
-			OIChangeRatio = `${getRatio(callOIChange*-1, putOIChange*-1)} :: 1`;
+			OIChangeRatio = `${getRatio(callOIChange * -1, putOIChange * -1)} :: 1`;
 		}
 	} else {
 		OIChangeRatio = `∞`;
@@ -435,8 +435,8 @@ function setOIRatio(callStrike, putStrike, $callOICell, $putOICell) {
 	optionChainPrice[callStrike]['oi'] = callOI;
 	optionChainPrice[putStrike]['oi'] = putOI;
 	let OIRatio = '';
-	if(callOI > 0 && putOI > 0){
-		if(callOI > putOI){
+	if (callOI > 0 && putOI > 0) {
+		if (callOI > putOI) {
 			OIRatio = `${getRatio(callOI, putOI)} :: 1`;
 		} else {
 			OIRatio = `1 :: ${getRatio(putOI, callOI)}`;
@@ -446,30 +446,30 @@ function setOIRatio(callStrike, putStrike, $callOICell, $putOICell) {
 	}
 	$callOICell.addClass('chips-hawa-tooltip');
 	$putOICell.addClass('chips-hawa-tooltip');
-	if($callOICell.find('.chips-hawa-tooltip-content').length){
+	if ($callOICell.find('.chips-hawa-tooltip-content').length) {
 		$callOICell.find('.chips-hawa-tooltip-content').text(`OI Ratio: ${OIRatio}`);
 		$putOICell.find('.chips-hawa-tooltip-content').text(`OI Ratio: ${OIRatio}`);
 	} else {
-		$callOICell.append(`<p class="chips-hawa-tooltip-content oi-ratio">OI Ratio: ${OIRatio}</p>`);	
-		$putOICell.append(`<p class="chips-hawa-tooltip-content oi-ratio">OI Ratio: ${OIRatio}</p>`);	
+		$callOICell.append(`<p class="chips-hawa-tooltip-content oi-ratio">OI Ratio: ${OIRatio}</p>`);
+		$putOICell.append(`<p class="chips-hawa-tooltip-content oi-ratio">OI Ratio: ${OIRatio}</p>`);
 	}
 	optionChainPrice[callStrike]['oiRatio'] = OIRatio;
 	optionChainPrice[putStrike]['oiRatio'] = OIRatio;
 }
 
-function getRatio(num1, num2){
-	let ratio = parseFloat(num1/num2).toFixed(1);
+function getRatio(num1, num2) {
+	let ratio = parseFloat(num1 / num2).toFixed(1);
 	return parseInt(ratio) == ratio ? parseInt(ratio) : ratio;
 }
 
 function initUI() {
-	if(location.href.endsWith("OptionChain.php")){
+	if (location.href.endsWith("OptionChain.php")) {
 		if ($('li.chips-hawa-asset-price-option').length == 0) {
 			$('#main-menu').append(
 				`<li class="telegramclass chips-hawa-asset-price-option">
 					<div>Asset Price Option</div>
-					<label><input type="radio" name="chips-hawa-asset-price" id="chips-hawa-fut" value="future" checked>Future</label>
-					<label><input type="radio" name="chips-hawa-asset-price" id="chips-hawa-spot" value="spot">Spot</label>
+					<label><input type="radio" name="chips-hawa-asset-price" id="chips-hawa-fut" value="future">Future</label>
+					<label><input type="radio" name="chips-hawa-asset-price" id="chips-hawa-spot" value="spot" checked>Spot</label>
 				</li>`
 			);
 		}
@@ -542,18 +542,18 @@ function main() {
 	// }, 1000);
 }
 
-if(location.href.endsWith("OptionChain.php")){
+if (location.href.endsWith("OptionChain.php")) {
 	main();
 }
 
 // iCharts updating OI selection based on the strike price in URL
-function updateOIStrike(){
+function updateOIStrike() {
 	const address = window.location.href;
 	const url = new URL(address);
-	if(address.includes('OptionsMonitor.php')){
+	if (address.includes('OptionsMonitor.php')) {
 		const strike = url.searchParams.get("strike");
 		const symbol = url.searchParams.get("symbol");
-		if(strike){
+		if (strike) {
 			$('#optSymbol').val(symbol).change();
 			$('#optCallStrike, #optPutStrike').append(`<option value="${strike}">${strike}</option>`);
 			$('#optCallStrike').val(strike).change();
@@ -569,8 +569,8 @@ $(() => {
 
 	// Global events
 	$('body').on('mouseenter', '.chips-hawa-tooltip', e => {
-        $(e.target).closest('td').find('.chips-hawa-tooltip-content').show();
-    }).on('mouseleave', '.chips-hawa-tooltip', e => {
-        $(e.target).closest('td').find('.chips-hawa-tooltip-content').hide();
-    });
+		$(e.target).closest('td').find('.chips-hawa-tooltip-content').show();
+	}).on('mouseleave', '.chips-hawa-tooltip', e => {
+		$(e.target).closest('td').find('.chips-hawa-tooltip-content').hide();
+	});
 });

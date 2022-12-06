@@ -6,7 +6,11 @@
   "background": {
     "service_worker": "./js/background.js"
   },
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -25,47 +29,103 @@
   "options_page": "options.html",
   "content_scripts": [
     {
-      "matches": ["https://*.sensibull.com/*"],
-      "css": ["./css/chips-hawa.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/sensibull.js"]
+      "matches": [
+        "https://*.sensibull.com/*"
+      ],
+      "css": [
+        "./css/chips-hawa.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/sensibull.js"
+      ]
     },
     {
-      "matches": ["https://*.icharts.in/opt/OptionChain.php"],
-      "css": ["./css/chips-hawa.css"],
-      "js": ["./js/lib/lib.packed.min.js",
-        "./js/icharts.js", "./js/icharts-screener.js"]
+      "matches": [
+        "https://*.icharts.in/opt/OptionChain.php"
+      ],
+      "css": [
+        "./css/chips-hawa.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/icharts.js",
+        "./js/icharts-screener.js"
+      ]
     },
     {
-      "matches": ["https://*.icharts.in/opt/OptionsMonitor.php"],
-      "css": ["./css/chips-hawa.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/lib/chart.min.js",
-        "./js/historyScan.js"]
+      "matches": [
+        "https://*.icharts.in/opt/OptionsMonitor.php"
+      ],
+      "css": [
+        "./css/chips-hawa.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/lib/chart.min.js",
+        "./js/historyScan.js"
+      ]
     },
     {
-      "matches": ["https://*.icharts.in/opt/Heatmap.php"],
-      "css": ["./css/chips-hawa.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/lib/chart.min.js",
-        "./js/nifty-bnf-direction.js"]
+      "matches": [
+        "https://*.icharts.in/opt/Heatmap.php"
+      ],
+      "css": [
+        "./css/chips-hawa.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/lib/chart.min.js",
+        "./js/nifty-bnf-direction-oc.js"
+      ]
     },
     {
-      "matches": ["https://*.chartink.com/*"],
-      "css": ["./css/chartink.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/chartink.js"]
+      "matches": [
+        "https://*.chartink.com/*"
+      ],
+      "css": [
+        "./css/chartink.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/chartink.js"
+      ]
     },
     {
-      "matches": ["https://*.upstox.com/option-chain/*"],
-      "css": ["./css/upstox.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/upstox.js"]
+      "matches": [
+        "https://*.upstox.com/option-chain/*"
+      ],
+      "css": [
+        "./css/upstox.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/upstox.js"
+      ]
     },
     {
-      "matches": ["https://*.screener.in/*"],
-      "css": ["./css/screener.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/screener.js"]
+      "matches": [
+        "https://*.screener.in/*"
+      ],
+      "css": [
+        "./css/screener.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/screener.js"
+      ]
     },
     {
-      "matches": ["https://*.stockedge.com/*"],
-      "css": ["./css/chartink.css"],
-      "js": ["./js/lib/lib.packed.min.js", "./js/stockEdge.js"]
+      "matches": [
+        "https://*.stockedge.com/*"
+      ],
+      "css": [
+        "./css/chartink.css"
+      ],
+      "js": [
+        "./js/lib/lib.packed.min.js",
+        "./js/stockEdge.js"
+      ]
     }
   ]
 }
