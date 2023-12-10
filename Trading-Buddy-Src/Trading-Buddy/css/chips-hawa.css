@@ -1,12 +1,12 @@
-.chips-hawa-price{
-  margin-right:10px;
-  background:rgb(183, 239, 193);
-  padding:2px 5px;
+.chips-hawa-price {
+  margin-right: 10px;
+  background: rgb(183, 239, 193);
+  padding: 2px 5px;
   flex: auto;
 }
 
-.chips-hawa-price.hawa{
-  background:rgb(255, 207, 207);
+.chips-hawa-price.hawa {
+  background: rgb(255, 207, 207);
   margin-left: 10px;
   margin-right: 0;
 }
@@ -42,7 +42,7 @@
 
 /* CARDS */
 
-.chips-hawa-cards{
+.chips-hawa-cards {
   position: fixed;
   right: 2px;
   top: 45%;
@@ -50,10 +50,9 @@
   max-width: 400px;
   transition: all 1s ease;
 }
-.chips-hawa-cards.cards.hide{
+.chips-hawa-cards.cards.hide {
   right: -400px;
 }
-
 
 .chips-hawa-cards.cards {
   display: flex;
@@ -72,22 +71,22 @@
   min-width: 200px;
 }
 
-.chips-hawa-cards.cards .card:hover button{
+.chips-hawa-cards.cards .card:hover button {
   display: block;
 }
 
-.chips-hawa-cards.cards .card h2{
+.chips-hawa-cards.cards .card h2 {
   font-size: 1em;
   margin: 0;
 }
 
-.chips-hawa-cards.cards .card p{
+.chips-hawa-cards.cards .card p {
   color: #ffffff;
   margin: 0;
   font-size: 0.9em;
 }
 
-.chips-hawa-cards.cards .card small{
+.chips-hawa-cards.cards .card small {
   font-size: 0.7em;
   font-style: italic;
   color: #fff;
@@ -147,19 +146,19 @@
 
 .chips-hawa-cards.cards button::before,
 .chips-hawa-cards.cards button::after {
-    content: '';
-    width: 1px;
-    height: 100%;
-    background: #fff;
-    display: block;
-    transform: rotate(45deg) translateX(0px);
-    position: absolute;
-    left: 50%;
-    top: 0;
+  content: "";
+  width: 1px;
+  height: 100%;
+  background: #fff;
+  display: block;
+  transform: rotate(45deg) translateX(0px);
+  position: absolute;
+  left: 50%;
+  top: 0;
 }
 
 .chips-hawa-cards.cards button::after {
-    transform: rotate(-45deg) translateX(0px);
+  transform: rotate(-45deg) translateX(0px);
 }
 
 /* CARD BACKGROUNDS */
@@ -199,7 +198,7 @@
   font-weight: normal;
 }
 
-.chips-hawa-pcr-ratio.p-hawa{
+.chips-hawa-pcr-ratio.p-hawa {
   margin: 2px 10px 2px 2px;
   background: #e7ed1a;
 }
@@ -214,7 +213,7 @@
   border-radius: 0px 3px 3px 0px;
 }
 
-.chips-hawa-menu a{
+.chips-hawa-menu a {
   display: block;
   text-align: center;
   padding: 10px 10px;
@@ -230,14 +229,14 @@
   text-decoration: none;
 }
 
-.chips-hawa-menu a span{
+.chips-hawa-menu a span {
   display: block;
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 600;
 }
 
-.chips-hawa-menu a.settings span{
+.chips-hawa-menu a.settings span {
   font-size: 27px;
   line-height: 0.7;
 }
@@ -246,17 +245,17 @@
   font-family: sans-serif;
 }
 
-.chips-hawa-cards.cards.settings h3{
-    margin: 10px 0;
+.chips-hawa-cards.cards.settings h3 {
+  margin: 10px 0;
 }
 
-.chips-hawa-cards.cards.settings .card label{
+.chips-hawa-cards.cards.settings .card label {
   display: block;
   margin-bottom: 5px;
   cursor: pointer;
 }
 
-.chips-hawa-cards.cards.settings .card input{
+.chips-hawa-cards.cards.settings .card input {
   margin-right: 10px;
   cursor: pointer;
 }
@@ -265,26 +264,26 @@
   font-size: 30px;
 }
 
-.chips-hawa-highlight{
+.chips-hawa-highlight {
   background-color: rgb(194, 221, 198) !important;
 }
 
-.chips-hawa-col-event{
+.chips-hawa-col-event {
   cursor: pointer;
 }
 
-.chips-hawa-highlight .MuiBox-root{
+.chips-hawa-highlight .MuiBox-root {
   font-weight: bold;
 }
 
 /* iCharts styles */
-.chips-hawa-asset-price-option{
+.chips-hawa-asset-price-option {
   padding: 8px 14px !important;
   color: #fff;
   font-weight: bolder;
 }
 
-.chips-hawa-OI-change{
+.chips-hawa-OI-change {
   background: #82ccc5 !important;
 }
 
@@ -295,7 +294,7 @@
 .chips-hawa-highlight-cell {
   background: #8ac9ed !important;
 }
-.chips-hawa-highlight-int-cell{
+.chips-hawa-highlight-int-cell {
   background: #fd878782 !important;
 }
 .chips-hawa-error {
@@ -313,7 +312,7 @@
 }
 
 /******** LTP OVERLAY **********/
-.chips-hawa-overlay::after{
+.chips-hawa-overlay::after {
   content: "";
   display: block;
   position: fixed;
@@ -325,11 +324,11 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10000;
 }
-.chips-hawa-overlay.hide{
+.chips-hawa-overlay.hide {
   display: none;
 }
 
-.chips-hawa-ltp-content{
+.chips-hawa-ltp-content {
   position: fixed;
   top: 50px;
   right: 50px;
@@ -342,12 +341,12 @@
   padding-bottom: 15px;
 }
 
-.chips-hawa-ltp-content h4{
+.chips-hawa-ltp-content h4 {
   font-weight: bold;
   text-align: center;
   border-bottom: 1px solid #000;
 }
-.chips-hawa-ltp-params{
+.chips-hawa-ltp-params {
   width: 49.7%;
   float: left;
   border-right: 1px solid #000;
@@ -361,53 +360,52 @@
   color: #008900;
 }
 
-.chips-hawa-ltp-output span{
+.chips-hawa-ltp-output span {
   text-align: center;
   display: block;
-  
 }
 
-.chips-hawa-ltp-output .output-price{
+.chips-hawa-ltp-output .output-price {
   padding-top: 35%;
 }
 
-.chips-hawa-ltp-output .output-sl{
+.chips-hawa-ltp-output .output-sl {
   margin-top: 25%;
   border-top: 1px solid black;
 }
 
-.chips-hawa-ltp-output.bearish{
+.chips-hawa-ltp-output.bearish {
   color: #ff0000a2;
 }
 
 .chips-hawa-clearfix:after {
-  content:"";
-  display:block;
-  clear:both;
+  content: "";
+  display: block;
+  clear: both;
 }
 
-.chips-hawa-ltp-params .ltp-params-item .key{
+.chips-hawa-ltp-params .ltp-params-item .key {
   font-weight: bold;
 }
 
-.chips-hawa-ltp-output .output-price{
+.chips-hawa-ltp-output .output-price {
   font-size: 20px;
   font-weight: bold;
 }
 
-#oc-table-head-group{
+#oc-table-head-group {
   z-index: 100;
 }
 
 .chips-hawa-buttons-call,
-.chips-hawa-buttons-put{
+.chips-hawa-buttons-put {
   width: 100%;
   height: 100%;
 }
 
 .chips-hawa-ltp-trigger {
   position: relative;
-  z-index: 99;
+  z-index: 89;
   display: block;
   border-radius: 5px;
   color: #fff;
@@ -418,52 +416,52 @@
   border: 1px solid #000;
 }
 
-.chips-hawa-overlay.ichart h4{
+.chips-hawa-overlay.ichart h4 {
   font-size: 20px;
 }
 
-.chips-hawa-overlay.ichart .ltp-params-item{
+.chips-hawa-overlay.ichart .ltp-params-item {
   padding: 7px 2px;
   font-size: 16px;
 }
 
-.chips-hawa-overlay.ichart .chips-hawa-ltp-output .output-sl{
+.chips-hawa-overlay.ichart .chips-hawa-ltp-output .output-sl {
   margin-top: 30%;
   padding-top: 10%;
 }
 
-.chips-hawa-overlay.ichart .chips-hawa-ltp-output .output-price{
+.chips-hawa-overlay.ichart .chips-hawa-ltp-output .output-price {
   font-size: 28px;
 }
 
 /* iChart Screener Data grid styles */
-.chips-hawa-rating{
+.chips-hawa-rating {
   padding: 0 !important;
 }
 
-.chips-hawa-BEARISH{
+.chips-hawa-BEARISH {
   padding: 8px 10px;
   background: #e32727;
   color: white;
 }
 
-.chips-hawa-BULLISH{
+.chips-hawa-BULLISH {
   padding: 8px 10px;
   background: #16971f;
   color: white;
 }
 
-.chips-hawa-SIDEWAYS{
+.chips-hawa-SIDEWAYS {
   padding: 8px 10px;
   background: #c5b412;
   color: white;
 }
 
-.chips-hawa-NEUTRAL{
+.chips-hawa-NEUTRAL {
   padding: 8px 10px;
 }
 
-#option-screener_wrapper{
+#option-screener_wrapper {
   padding: 0 50px 50px 50px;
 }
 
@@ -472,7 +470,7 @@
   display: block !important;
 }
 
-#ichart-utility-buttons{
+#ichart-utility-buttons {
   padding: 25px 0 50px 50px;
 }
 
@@ -482,38 +480,38 @@
   text-align: center;
 }
 
-.chips-hawa-analysis-table{
+.chips-hawa-analysis-table {
   padding: 0 0 50px 50px;
   display: inline-block;
 }
-.chips-hawa-analysis-table td.right-align-text{
+.chips-hawa-analysis-table td.right-align-text {
   text-align: right;
 }
 
-.chips-hawa-analysis-table td span{
+.chips-hawa-analysis-table td span {
   display: block;
 }
 
-.chips-hawa-analysis-table td span.cnt{
+.chips-hawa-analysis-table td span.cnt {
   margin-top: 10px;
 }
 
-.chips-hawa-select-stock{
+.chips-hawa-select-stock {
   text-decoration: none;
   color: #428bca;
 }
 
-#option-screener_wrapper table.dataTable.display tbody tr:hover>.sorting_1,
+#option-screener_wrapper table.dataTable.display tbody tr:hover > .sorting_1,
 #option-screener_wrapper table.dataTable.display tbody tr:hover {
   background-color: #c7e5e5;
 }
 
-#option-screener_wrapper table.dataTable.display tbody td{
+#option-screener_wrapper table.dataTable.display tbody td {
   padding: 10px;
   position: relative;
 }
 
-.chips-hawa-tooltip-12{
+.chips-hawa-tooltip-12 {
   margin-left: 10px;
   background: #3f86c8;
   padding: 2px 6px;
@@ -539,19 +537,19 @@
   left: 100%;
   width: 250px;
   top: 0;
-  -webkit-box-shadow: -3px -5px 41px 1px rgba(0,0,0,0.36);
-  -moz-box-shadow: -3px -5px 41px 1px rgba(0,0,0,0.36);
-  box-shadow: -3px -5px 41px 1px rgba(0,0,0,0.36);
+  -webkit-box-shadow: -3px -5px 41px 1px rgba(0, 0, 0, 0.36);
+  -moz-box-shadow: -3px -5px 41px 1px rgba(0, 0, 0, 0.36);
+  box-shadow: -3px -5px 41px 1px rgba(0, 0, 0, 0.36);
 }
-.chips-hawa-tooltip-content.theta-analysis{
+.chips-hawa-tooltip-content.theta-analysis {
   width: 150px;
 }
-.chips-hawa-tooltip-content p{
+.chips-hawa-tooltip-content p {
   margin-bottom: 0;
   line-height: 1.5;
 }
 
-.chips-hawa-tooltip-content.oi-ratio{
+.chips-hawa-tooltip-content.oi-ratio {
   width: fit-content;
   background: #02071e;
   color: #fff;
@@ -567,18 +565,18 @@
   margin-left: 10px;
   text-decoration: none;
 }
-.chips-hawa-tv_link img{
+.chips-hawa-tv_link img {
   height: 12px;
   width: 18px;
 }
-.chips-hawa-theta-bearish{
-  color: #e32727
+.chips-hawa-theta-bearish {
+  color: #e32727;
 }
 
-.chips-hawa-theta-bullish{
-  color: #16971f
+.chips-hawa-theta-bullish {
+  color: #16971f;
 }
 
-.chips-hawa-relative{
+.chips-hawa-relative {
   position: relative;
 }
